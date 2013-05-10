@@ -1,0 +1,9 @@
+<div class="block">
+    <div class="header"  id="taghead">标签</div>
+    <div id=recenttagcontent style="padding-bottom:9px;">
+            {% for tag in get_alltags() %}
+            <a href="/post/list/{{ tag.name | tag }}/" class="cloud_tag">{{tag.name}}[{{tag.count}}]</a>
+            {% endfor %}
+            <div style="clear:both;"></div>
+    </div>
+</div>

@@ -1,0 +1,278 @@
+{% extends "base_2col.html" %}
+
+{% if post.privilege != 2 %}
+    {% set tab_article = 1 %}
+{% else %}
+    {% set table_sid = post.key.id() %}
+{% endif %}
+
+{% block title %} - {{ post.title }} {% endblock %}
+{% block script %}
+<script type="text/javascript" src="/scripts/jquery.scrollTo.js"></script>
+<script type="text/javascript">
+
+    function constructPCommnet(comment){
+        if(comment == null){
+            return '';
+        }
+        var html = '<div class="quote"><div class="commentavatar"><img src="' + comment.avatar + '" /><br />';
+        if(comment.homepage!=null && comment.homepage!=''){
+            html += '<a href="' + comment.homepage + '" target="_blank">';
+        }
+        if(comment.anonymous){
+            html += '游客:';
+        }
+        html += comment.username;
+        if(comment.homepage!=null && comment.homepage!=''){
+            html += '</a>';
+        }
+        html += '</div><div class="commentright"><div class="commenttitle">';
+        html += comment.date;
+        if(comment.admin){
+            html += ' | ' + comment.email + ' | ' + comment.ip;
+        }
+        html += '</div>';
+
+        html += '<div class=commenbody>' + comment.content + '</div><div>';
+        html += '<a href="javascript:void(0)" onclick="replyComment(\'' + comment.id + '\')">回复</a>';
+        html += '</div></div></div>';
+        return html;
+    }
+
+    function constructComment(comment){
+        var html = '<div class="comment"><div class="commentavatar"><img src="' + comment.avatar + '" /><br />';
+        if(comment.homepage!=null && comment.homepage!=''){
+            html += '<a href="' + comment.homepage + '" target="_blank">';
+        }
+        html += '<span id="u_' + comment.id + '">' + comment.username + '</span>';
+        if(comment.homepage!=null && comment.homepage!=''){
+            html += '</a>';
+        }
+        html += '</div><div class="commentright"  id="c' + comment.id + '"><div class="commenttitle">';
+        html += comment.date;
+        if(comment.admin){
+            html += ' | ' + comment.email + ' | ' + comment.ip;
+        }
+        html += '</div>';
+
+        html += constructPCommnet(comment.parentContent);
+
+        html += '<div class=commenbody>' + comment.content + '</div><div>';
+        html += '<a href="javascript:void(0)" onclick="replyComment(\'' + comment.id + '\')">回复</a>';
+        if(comment.admin || comment.cuser == '${user.userId}'){
+            html += ' | <a href="javascript:void(0);"  onclick="delete_comment(' + comment.id + ')">删除</a>';
+        }
+        html += '</div></div></div>';
+        return html;
+    }
+
+    function load_comment(page){
+        var url = "/comment/{{ post.key.id() }}/" + page;
+        $.ajax({
+            type: "get",
+            url: url,
+            dataType:'json',
+            beforeSend: function(){
+                $("#comments").html("努力加载评论中....");
+            },
+            success: function(data){
+                $("#comments").html("");
+                $(data.clist).each(function(i, comment){
+                    $("#comments").append(constructComment(comment));
+                });
+                var html = '<div style="font-size:12px;padding-left:10px;">';
+                html += '共' + data.count + '条评论, 第' + data.page + '/' + data.pagecount + '页';
+                if(data.page > 1){
+                    html += '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:void(0)" onclick="load_comment(' +
+                            (data.page-1) + ')">&lt;&lt;上一页</a>';
+                }
+                if(data.page < data.pagecount){
+                    html += '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:void(0)" onclick="load_comment(' +
+                            (data.page+1) + ')">下一页&gt;&gt;</a>';
+                }
+                html += '</div>';
+                $("#comments").append(html);
+            },
+            complete: function(){
+                //HideLoading();
+            },
+            error: function(){
+                //请求出错处理
+                $("#comments").html("评论加载出错.");
+            }
+        });
+    }
+
+    //{% if isadmin() %}
+    function delete_comment(cid){
+        $.post("/comment/delete", {commentid:cid}, function(){
+            load_comment(1);
+        });
+    }
+
+    function deleteBlogPost(id, name){
+        if(confirm("确定要删除  \"" + name + "\"?")){
+            window.location = "/post/delete?postid=" + id;
+        }
+    }
+    //{% endif %}
+
+    function replyComment(id){
+        $("#replyto").val(id);
+        $("#replyname").html($("#u_"+id).html());
+        $("#replytext").show();
+        $.scrollTo("#newcomment", 800);
+    }
+
+    function removeReply(){
+        $("#replyto").val('');
+        $("#replyname").html('');
+        $("#replytext").hide();
+    }
+
+$(document).ready(function(){
+    load_comment(1);
+
+    // comment for submit
+    $("#comment_form").submit(function (e){
+        e.preventDefault();
+        $('#comment_submit').attr('disabled','disabled');
+        var cform = $("#comment_form");
+        var form = cform[0]
+        if(form.username.value == ""){
+            alert("用户名 不能为空.");
+            $('#comment_submit').removeAttr('disabled');
+            return false;
+        }
+        if(form.content.value == ""){
+            alert("评论 不能为空.");
+            $('#comment_submit').removeAttr('disabled');
+            return false;
+        }
+        //{% if not getuser()%}
+        var seq = form.seq.value;
+        var code = form.code.value;
+        var flag = -1;
+        $.ajax({
+            type:'POST',
+            url: "/captcha/check",
+            data:{"code":code, "seq":seq},
+            async:false,
+            dataType: 'json',
+            success:function(data){
+                if(data.state == 0){
+                    flag = 0;
+                }else{
+                    flag = -1;
+                }
+            }
+        });
+        if (flag != 0) {
+            alert('验证码错误');
+            $('#comment_submit').removeAttr('disabled');
+            return false;
+        }
+        //{% endif %}
+
+        $.post(form.action, cform.serialize(), function(result){
+            if(result.state == 0){
+                //成功
+                load_comment(1);
+                form.content.value = "";
+                removeReply();
+                $.scrollTo("#comments", 800);
+            } else {
+                alert('评论发表失败:' + result.msg);
+            }
+        }, "json");
+        $('#comment_submit').removeAttr('disabled');
+        return false;
+    });
+});
+</script>
+{% endblock %}
+
+{% block main %}
+    {# 文章区域 #}
+    <div class="post" id="post_{{ post.key.id() }}">
+        {% if post.privilege != 2 %}
+        <h1 class=title><a href="/post/{{ post.key.id() }}">{{ post.title }}</a></h1>
+        <div class="postinfo">
+                {{ post.date|datetime }} | {{ post.author.nickname() }}
+                {% if post.tags %}
+                | 标签:
+                {% for tag in post.tags %}
+                    <a href="/post/list/{{ tag | tag }}/">{{ tag }}</a>
+                    {% if not loop.last %},{% endif %}
+                {% endfor %}
+                {% endif %}
+            {% if isadmin() %}
+            | <a href="javascript:void(0);" onclick="deleteBlogPost('{{ post.key.id() }}', '{{ post.title }}');">删除</a>
+            | <a href="/post/edit?postid={{ post.key.id() }}">编辑</a>
+            {% endif %}
+        </div>
+        {% endif %}
+        <div class="post_body">{{ post.content }}</div>
+
+        {% if post.privilege != 2 %}
+        <div class="underinfo">
+            {% include '/inc/share.html' %}
+        </div>
+        {% endif %}
+    </div>
+
+    <div id="comments">
+    </div>
+
+    <div id="newcomment" class="newcomment">
+        <script>
+            function genseq(){
+                return 'seq-' + (new Date()).valueOf() + '-' + Math.ceil(Math.random()*1000);
+            }
+            function refreshcaptcha(){
+                seq = genseq();
+                document.getElementById('captcha_img').src = '/captcha?seq=' + seq;
+                document.getElementById('input_seq').value = seq;
+            }
+        </script>
+        <form action="/comment/add" method="post" id="comment_form">
+            <input type=hidden name=replyto id=replyto value="" />
+            {% if not getuser() %}
+            <script>
+                var seq = genseq();
+                document.write('<input type="hidden" id="input_seq" name="seq" value="' + seq + '" />');
+            </script>
+            {% endif %}
+            <div style="line-height: 200%;">
+                {% if getuser() %}
+                <input type=text name="username" id="username" readonly="readonly" value="{{ getuser().nickname() }}" size=30 /><label for="username">昵称(必填)</label><br />
+                <input type="text" name="email" id="email" readonly="readonly" value="{{ getuser().email() }}" size=30 /><label for="email">电子邮箱(必填,邮箱地址将不会公开)</label><br />
+                {% else %}
+                你现在以游客身份发表评论：<br />
+                <input type=text name="username" id="username" maxlength=30 size=30 /><label for="username"> 昵称(必填)</label><br />
+                <input type="text" name="email" id="email" size=30 /><label for="email"> 电子邮箱(邮箱地址将不会公开)</label><br />
+                {% endif %}
+
+                <input type="text" name="homepage" id="homepage" size=30 value="" /><label for="homepage"> 个人主页</label><br />
+
+                <span id="replytext" style="display:none;border:1px solid #CCCCCC;padding:1px;" >
+                    你正在回复<span id="replyname"></span>的评论.
+                    <a href='javascript:void(0)' onclick="removeReply()" title="取消恢复指定评论">X</a>
+                </span>
+                <div></div>
+                <textarea name="content" id="content" style="width:80%;height:100px;font-size:12px;"></textarea>(必填)
+                <input type="hidden" name="postid" id="postid" value="{{ post.key.id() }}" />
+                <br />
+
+                {% if not getuser() %}
+                    <input type=text name="code" id="code" size=5 autocomplete="off" />
+                    <a href="javascript:void(0);"  onclick="refreshcaptcha();" style="border:none;" ><script>
+                        document.write('<img id="captcha_img" src="/captcha?seq=' + seq + '" style="display:inline;vertical-align:middle;border:none;" />');
+                    </script></a>
+                    <label> 点击图片刷新验证码</label>   <br />
+                {% endif %}
+                <input type="submit" id="comment_submit" value="提交" />
+            </div>
+        </form>
+    </div>
+{% endblock %}

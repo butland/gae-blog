@@ -1,0 +1,80 @@
+{% extends "base_1col.html" %}
+{% set tab_album = 1 %}
+
+{% block title %} - 相册 - {{album.title}}{% endblock %}
+
+{% block script %}
+<link rel="stylesheet" type="text/css" href="/styles/album.css" />
+<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="/scripts/jquery.history.js" type="text/javascript" charset="utf-8"></script>
+<script src="/scripts/jquery.galleriffic.js" type="text/javascript" charset="utf-8"></script>
+{% endblock %}
+
+{% block main %}
+<div id="navigation" class="navigation">
+        <ul class="thumbs noscript">
+            {% for photo in album.list %}
+            <li><a class="thumb" name="{{photo.id}}" href="{{photo.src}}?imgmax=800" title="{{photo.title}}">
+                <img src="{{photo.thumbnail}}" />
+            </a>
+                <div class="caption">{{photo.summary}}</div>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+    <div id="gallery">
+        <div id="controls" class="controls"></div>
+        <div id="loading" style="margin-top:250px;font-size: 28px;">努力加载中......</div>
+        <div style="margin-top:20px;display:table;"><div id="slideshow" class="slideshow"></div></div>
+        <div id="image-desc" class="image-desc"></div>
+    </div>
+    <div style="clear:both;"></div>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            var gallery = $('#navigation').galleriffic({
+                delay:                2000,
+                numThumbs:            8,
+                imageContainerSel:    '#slideshow',
+                controlsContainerSel: '#controls',
+                descContainerSel:     '#image-desc',
+                loadingContainerSel:  '#loading',
+                enableHistory:             true,
+                playLinkText:              '自动播放',
+                pauseLinkText:             '暂停',
+                prevLinkText:              '&lsaquo;上一张',
+                nextLinkText:              '下一张&rsaquo;',
+                nextPageLinkText:          '&rsaquo;&rsaquo;',
+                prevPageLinkText:          '&lsaquo;&lsaquo;',
+            });
+
+            gallery.onFadeOut = function() {
+                $('#details').fadeOut('fast');
+            };
+
+            gallery.onFadeIn = function() {
+                $('#details').fadeIn('fast');
+            };
+
+            function pageload(hash) {
+                if(hash) {
+                    $.galleriffic.gotoImage(hash);
+                } else {
+                    gallery.gotoIndex(0);
+                }
+            }
+
+            $.historyInit(pageload);
+
+            $("a[rel='history']").on('click', function(e) {
+                if (e.button != 0) return true;
+                var hash = this.href;
+                hash = hash.replace(/^.*#/, '');
+                $.historyLoad(hash);
+
+                return false;
+            });
+
+
+        });
+    </script>
+{% endblock %}

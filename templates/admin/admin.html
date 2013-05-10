@@ -1,0 +1,11 @@
+{% extends "/base_1col.html" %}
+{% set tab_admin = 1 %}
+
+
+{% block main %}
+欢迎你，{{user}}. <br />
+<a href="/post/edit">发表文章</a> <br />
+<a href="/admin/file">管理文件</a> <br />
+<a href="/admin/config">设置</a> <br />
+<a href="/logout">退出</a> <br />
+{% endblock %}

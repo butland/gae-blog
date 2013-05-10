@@ -1,0 +1,32 @@
+application: dongliu84
+version: 2
+runtime: python27
+api_version: 1
+threadsafe: true
+
+handlers:
+
+- url: /images
+  static_dir: images
+- url: /scripts
+  static_dir: scripts
+- url: /styles
+  static_dir: styles
+- url: /html
+  static_dir: html
+
+- url: /favicon.ico
+  static_files: favicon.ico
+  upload: favicon.ico
+- url: /robots.txt
+  static_files: robots.txt
+  upload: robots.txt
+
+- url: /.*
+  script: main.app
+
+libraries:
+- name: jinja2
+  version: latest
+- name: PIL
+  version: latest

@@ -1,0 +1,109 @@
+{% extends "base_2col.html" %}
+
+{% block title %} - 文章搜索{{query}} {% endblock %}
+{% block script %}
+    <script type="text/javascript">
+        function processContent(content, keys){
+            var content_size = 180;
+            var start = 0;
+            var length = 0;
+            for(var i in keys){
+                var idx = content.indexOf(keys[i]);
+                if(idx > 0){
+                    if(keys[i].length > length){
+                        start = idx;
+                        length = keys[i].length;
+                    }
+                }
+            }
+            if(start > 10)start = start - 10;
+            if(content.length>start+content_size){
+                content=content.substr(start, content_size) + "...";
+            }else if(content.length>content_size){
+                content = content.substr(content.length-content_size, content_size) + "...";
+            }
+            return processKeys(content, keys);
+        }
+
+        function processKeys(content, keys){
+            for(var i in keys){
+                var reg=new RegExp(keys[i],"gi")
+                content = content.replace(reg, '<em>' + keys[i] + '</em>');
+            }
+            return content;
+        }
+
+        function constructItem(post, query){
+            if(post == null){
+                return '';
+            }
+            var post_url = '/post/' + post.postid;
+            var keys = query.split(' ');
+            var title = post.title;
+            title = processKeys(title, keys);
+            var author = post.author;
+            var publish = post.date;
+            var content = post.content;
+            content = processContent(content, keys);
+            var html = '<div class="search_item">';
+            html += '<div class="title"><a href="' + post_url + '" target="_blank">' + title + '</a></div>';
+            html += '<div class="postinfo">' + author + ' | ' + publish + '</div>';
+            html += '<div class="content">' + content + '</div>';
+            html += '</div>';
+            return html;
+        }
+
+        function load_result(cursor){
+            var url = '/search/ajax?query={{query}}&cursor=' + cursor;
+            $.ajax({
+                type: "get",
+                url: url,
+                dataType:'json',
+                beforeSend: function(){
+                    $("#search_more").html('努力加载中....');
+                },
+                success: function(data){
+                    cursor = data.cursor==null?'':data.cursor;
+                    $("#search_info").html('找到相关文章' + data.total + '篇');
+                    var rlist = data.list;
+                    var query = data.query;
+                    $(rlist).each(function(i, post){
+                        $("#search_list").append(constructItem(post, query));
+                    });
+                    if(cursor != null && cursor != ''){
+                        $("#search_more").html('<span style="cursor:pointer" onclick="load_result(\'' + cursor + '\')">加载更多</span>');
+                    }else{
+                        $("#search_more").html('');
+                    }
+                },
+                complete: function(){
+                    //HideLoading();
+                },
+                error: function(){
+                    //请求出错处理
+                    $("#search_more").html("加载出错..");
+                }
+            });
+        }
+        $(document).ready(function(){
+            load_result('');
+        });
+    </script>
+
+    <style>
+        div.search_item{
+            margin-top:10px;
+        }
+        em {
+            color:red;
+            font-style:normal;
+        }
+    </style>
+{% endblock %}
+
+{% block main %}
+    <div id='search_info' style="float:right;color: #444444;margin-bottom:-10px;"></div>
+    <div style="clear:both"></div>
+    <div id='search_list'></div>
+    <div id='search_more' style="margin-top:10px;text-align: center;"></div>
+{% endblock %}

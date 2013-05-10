@@ -1,0 +1,5 @@
+indexes:
+#- kind: Resource
+#  properties:
+#  - name: date
+#    direction: desc

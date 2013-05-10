@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div style="width:100%;display:table;">
+    <div id="main">
+        {% block main %}{% endblock %}
+    </div>
+
+
+    <div id="sidebar">
+        {# sidebar zone #}
+        {# 用于撑起右侧栏，在窗口所小时不被压缩 #}
+        <div style="width:240px;"></div>
+
+        {% if side_long %}
+        {% include '/inc/rss.html' %}
+        {% endif %}
+
+        {# gonggao or something similar #}
+        {% if side_long %}
+        {% include '/inc/talk.html' %}
+        {% endif %}
+
+        {# tag cloud #}
+        {% if side_long %}
+        {% include '/inc/tag_cloud.html' %}
+        {% endif %}
+
+        {# recent post #}
+        {% include '/inc/recent_posts.html' %}
+
+        {% include '/inc/recent_comments.html' %}
+
+        {% if side_long%}
+        {# archive #}
+        {% include '/inc/archive.html' %}
+        {% endif %}
+    </div>
+{# end sider div #}
+
+</div>
+{% endblock %}

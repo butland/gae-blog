@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>{{ config.heading }} {% block title %}{% endblock %}</title>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+    {# disable IE6 IE7 and IE8 #}
+    <!--[if lte IE 8]> <script type="text/javascript"> window.location='/html/browser.html'; </script> <![endif]-->
+    {# feed #}
+    {% block feed %}{% endblock %}
+    <link rel="icon" href="/favicon.ico" />
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <link rel="stylesheet" type="text/css" href="/styles/main.css" />
+    <script type="text/javascript" src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+    {# script #}
+    {% block script %}{% endblock %}
+    <script>
+        $(document).ready(function() {
+            $.get("/tools/fortune", function(result) {
+                $("#fortune").html(result);
+                $("#fortune").attr("title", result);
+            });
+        });
+    </script>
+</head>
+<body>
+{# LOGO页头区 #}
+<div id="header"><div class="outer" style="height:100%;">
+    <div id="blogtitle">
+        <span id="title"><a href="http://{{ config.host }}/">{{ config.heading }}</a></span>
+        <span class="description">{{ config.subheading }}</span>
+    </div>
+
+    <div id="search">
+        <form method="get" action="/search">
+            <input type="search" size="25" name="query" value="{{ query }}" placeholder="搜索文章"/>
+            <input type="submit" value="搜索" style="border:1px solid #464646;margin-right:0;"/>
+        </form>
+    </div>
+
+    <div class=tabbar><ul class="tabul">
+        <li class="{% if tab_article %}focustab{% endif %}"><a href="/post">文章</a></li>
+        {% if config.picasaalbumname %}
+        <li class="{% if tab_album %}focustab{% endif %}"><a href="/album">相册</a></li>
+        {% endif %}
+        {% for spost in get_spin_posts() %}
+        <li class="{% if table_sid == spost.key.id() %}focustab{% endif %}" >
+        <a href="/post/{{ spost.key.id() }}">{{ spost.title }}</a>
+        </li>
+        {% endfor %}
+        {% if isadmin() %}
+        <li class="{% if tab_admin %}focustab{% endif %}"><a href="/admin">管理</a></li>
+        {% endif %}
+    </ul></div>
+</div></div>
+<div class="outer">
+    {# 主体部分内容 #}
+    {% block content %}{% endblock %}
+    <div class="footer">
+        Google App Engine 强力驱动 <br />
+        版权所有: 2008-2013
+    </div>
+</div>
+{# 各种网页跟踪代码.now only support google analytics #}
+{% if config.gauid %}
+{% include '/inc/pagetracker.html' %}
+{% endif %}
+</body>
+</html>
