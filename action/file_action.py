@@ -10,6 +10,7 @@ from datetime import datetime
 
 CACHE_DURATION = 30 * 24 * 60 * 60 * 1000
 
+
 class FileShow(webapp2.RequestHandler):
     def get(self, fileid):
         file = File.getfile(int(fileid))
@@ -30,6 +31,7 @@ class FileShow(webapp2.RequestHandler):
 #                filename = filename[idx+1:]
 #        self.response["Content-Disposition"] =  "inline; filename=" + urllib.quote(filename.encode("utf-8"))
         self.response.write(file.content)
+
 
 class FileUpload(webapp2.RequestHandler):
     def post(self):
@@ -53,12 +55,14 @@ class FileUpload(webapp2.RequestHandler):
         else:
             self.redirect('/admin/file')
 
+
 class FileDelete(webapp2.RequestHandler):
     def get(self):
         fileid = int(self.request.get("fileid"))
         file = File.getfile(fileid)
         File.delfile(file)
         self.redirect('/admin/file')
+
 
 class BlobShow(blobstore_handlers.BlobstoreDownloadHandler):
     def get(self, blobkey):

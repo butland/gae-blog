@@ -13,6 +13,7 @@ album_base = scheme + '://picasaweb.google.com/data/feed/api/user/%s/album/%s?' 
                       'fields=title,openSearch:totalResults,' \
                       'entry(published,updated,title,summary,gphoto:id,gphoto:width,gphoto:height,content,media:group(media:thumbnail))'
 
+
 class Album(object):
     def __init__(self):
         self.title = ''
@@ -21,6 +22,7 @@ class Album(object):
         self.size = ''
         self.thumbnail = ''
         self.list = None
+
 
 class Photo(object):
     def __init__(self):
@@ -31,7 +33,7 @@ class Photo(object):
         self.thumbnail = ''
 
 
-def geturl(url):
+def __geturl(url):
     response = None
     try:
         response = urllib2.urlopen(url)
@@ -43,50 +45,43 @@ def geturl(url):
         if response:
             response.close()
 
-class PicasaService(object):
 
-    @staticmethod
-    def get_album_list(userid):
-        album_list = album_list_base % userid
-        content = geturl(album_list)
-        result = json.loads(content)
-        feed = result["feed"]
-        entrys = feed["entry"]
-        list = []
-        for entry in entrys:
-            album = Album()
-            album.title = entry["title"]["$t"]
-            album.albumid = entry["gphoto$id"]["$t"]
-            album.albumname = entry["gphoto$name"]["$t"]
-            album.size = entry["gphoto$numphotos"]["$t"]
-            album.thumbnail = entry["media$group"]["media$thumbnail"][0]["url"]
-            list.append(album)
-        return list
-
-    @staticmethod
-    def get_album(userid, albumname):
-        albumurl = album_base % (userid, albumname)
-        content = geturl(albumurl)
-        result = json.loads(content)
-        feed = result["feed"]
+def get_album_list(userid):
+    album_list = album_list_base % userid
+    content = __geturl(album_list)
+    result = json.loads(content)
+    feed = result["feed"]
+    entrys = feed["entry"]
+    list = []
+    for entry in entrys:
         album = Album()
-        album.title = feed["title"]["$t"]
-        album.size = feed["openSearch$totalResults"]["$t"]
-
-        entrys = feed["entry"]
-        list = []
-        for entry in entrys:
-            photo = Photo()
-            photo.title = entry["title"]["$t"]
-            photo.summary = entry["summary"]["$t"]
-            photo.src = entry["content"]["src"]
-            photo.id = entry["gphoto$id"]["$t"]
-            photo.thumbnail = entry["media$group"]["media$thumbnail"][1]["url"]
-            list.append(photo)
-        album.list = list
-        return album
+        album.title = entry["title"]["$t"]
+        album.albumid = entry["gphoto$id"]["$t"]
+        album.albumname = entry["gphoto$name"]["$t"]
+        album.size = entry["gphoto$numphotos"]["$t"]
+        album.thumbnail = entry["media$group"]["media$thumbnail"][0]["url"]
+        list.append(album)
+    return list
 
 
-#picasaService = PiacasaService()
-#print picasaService.get_album_list("dongliu84")
-#print picasaService.get_album("dongliu84", "olskIB")
+def get_album(userid, albumname):
+    albumurl = album_base % (userid, albumname)
+    content = __geturl(albumurl)
+    result = json.loads(content)
+    feed = result["feed"]
+    album = Album()
+    album.title = feed["title"]["$t"]
+    album.size = feed["openSearch$totalResults"]["$t"]
+
+    entrys = feed["entry"]
+    list = []
+    for entry in entrys:
+        photo = Photo()
+        photo.title = entry["title"]["$t"]
+        photo.summary = entry["summary"]["$t"]
+        photo.src = entry["content"]["src"]
+        photo.id = entry["gphoto$id"]["$t"]
+        photo.thumbnail = entry["media$group"]["media$thumbnail"][1]["url"]
+        list.append(photo)
+    album.list = list
+    return album

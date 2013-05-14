@@ -10,8 +10,9 @@ from tools.web_tools import *
 from tools import pinyin
 from datetime import datetime,timedelta,time
 from google.appengine.api import users
-from service.search_service import *
+from service import postindex
 import random
+
 
 def emptyPost():
     post = Post()
@@ -24,13 +25,18 @@ def emptyPost():
     post.last_modify_date = datetime.today()
     return post
 
-def showPost(post):
+
+def is_post_public(post):
     return post is not None and post.privilege == PRIVILEGE_SHOW
 
-def dealtag(opost, post):
-    if showPost(opost):
-        if showPost(post):
-            SearchService.addpost(post)
+
+def on_post_change(opost, post):
+    """
+    deal with tags, counts, and index when post have been changed.
+    """
+    if is_post_public(opost):
+        if is_post_public(post):
+            postindex.addpost(post)
             oarchive = (opost.date+timedelta(hours=8)).strftime('%Y-%m')
             archive = (post.date+timedelta(hours=8)).strftime('%Y-%m')
             if oarchive != archive:
@@ -43,7 +49,7 @@ def dealtag(opost, post):
             for tag in tags:
                 Tag.increase(CID_TAG, tag)
         else:
-            SearchService.delpost(opost.key.id())
+            postindex.delpost(opost.key.id())
             Tag.decrease(CID_COUNTER, NAME_ALLPOST)
             Tag.decrease(CID_ARCHIVE, (opost.date+timedelta(hours=8)).strftime('%Y-%m'))
             for tag in opost.tags:
@@ -51,8 +57,8 @@ def dealtag(opost, post):
                     Tag.decrease(CID_TAG, tag)
 
     else:
-        if showPost(post):
-            SearchService.addpost(post)
+        if is_post_public(post):
+            postindex.addpost(post)
             Tag.increase(CID_COUNTER, NAME_ALLPOST)
             Tag.increase(CID_ARCHIVE, (post.date+timedelta(hours=8)).strftime('%Y-%m'))
             for tag in post.tags:
@@ -62,12 +68,11 @@ def dealtag(opost, post):
             pass
 
 
-
 class PostList(webapp2.RequestHandler):
     """
     show post list
     """
-    def get(self, pagenum = '1', tag=None, archive=None):
+    def get(self, pagenum='1', tag=None, archive=None):
         try:
             page = int(pagenum)
         except Exception, ex:
@@ -95,11 +100,11 @@ class PostList(webapp2.RequestHandler):
         pager.setbase(base)
 
         postlist = Post.get_postlist(
-            privilege = PRIVILEGE_SHOW,
-            offset = pager.offset,
-            limit = pager.pagesize,
-            tag = tag,
-            archive = archive)
+            privilege=PRIVILEGE_SHOW,
+            offset=pager.offset,
+            limit=pager.pagesize,
+            tag=tag,
+            archive=archive)
         if tag:
             tag = tag.decode('utf-8')
         template_values = {
@@ -109,6 +114,7 @@ class PostList(webapp2.RequestHandler):
             'archive': archive,
         }
         show_html(self.response, 'post_list.html', template_values)
+
 
 class PostDetail(webapp2.RequestHandler):
     """
@@ -154,6 +160,7 @@ class PostEdit(webapp2.RequestHandler):
         }
         show_html(self.response, 'post_edit.html', template_values)
 
+
 class PostUpdate(webapp2.RequestHandler):
     """
     add or update post
@@ -184,8 +191,9 @@ class PostUpdate(webapp2.RequestHandler):
         post.privilege = int(self.request.get('privilege'))
         post.date = datetime.strptime(self.request.get('pubdate'), '%Y-%m-%d %H:%M') - timedelta(hours=8)
         newid = Post.savepost(post)
-        dealtag(opost, post)
+        on_post_change(opost, post)
         self.redirect('/post/' + str(newid.id()))
+
 
 class PostDelete(webapp2.RequestHandler):
     """
@@ -199,7 +207,7 @@ class PostDelete(webapp2.RequestHandler):
             return
         post = Post.getpost(int(postidstr))
         if post:
-            dealtag(post, None)
+            on_post_change(post, None)
             post.privilege = PRIVILEGE_DEL
             post.commentCount = 0
             Post.savepost(post)

@@ -1,11 +1,13 @@
 __author__ = 'dongliu'
 
 from google.appengine.ext import ndb
-from google.appengine.api.app_identity import *
+from google.appengine.api import app_identity
 from tools.decorators import singleton
+
 
 class Configure(ndb.Model):
     value = ndb.StringProperty(indexed=False)
+
 
 def setdict(pdict, name ,value):
     ovalue = pdict[name]

@@ -1,13 +1,13 @@
 #encoding=utf-8
 
 import webapp2
-from service.picasa import *
+from service import picasa
 from db.config_db import *
 from tools.web_tools import *
 
 class PicasaList(webapp2.RequestHandler):
     def get(self):
-        album_list = PicasaService.get_album_list(Config()["picasaalbumname"])
+        album_list = picasa.get_album_list(Config()["picasaalbumname"])
         template_values = {
             "albumlist": album_list,
         }
@@ -15,7 +15,7 @@ class PicasaList(webapp2.RequestHandler):
 
 class PicasaAlbum(webapp2.RequestHandler):
     def get(self, albumname):
-        album = PicasaService.get_album(Config()["picasaalbumname"], albumname)
+        album = picasa.get_album(Config()["picasaalbumname"], albumname)
         template_values = {
             "album": album,
             }

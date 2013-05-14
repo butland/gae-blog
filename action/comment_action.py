@@ -7,7 +7,9 @@ from tools.web_tools import *
 from datetime import datetime,timedelta
 from google.appengine.api import memcache
 from google.appengine.api import users
+from google.appengine.api import taskqueue
 import json
+
 
 class CommentList(webapp2.RequestHandler):
     def get(self, postid, pagenum = '1'):
@@ -32,10 +34,11 @@ class CommentList(webapp2.RequestHandler):
         }
         show_json(self.response, result)
 
+
 class CommentInsert(webapp2.RequestHandler):
     def post(self):
         postid = int(self.request.get('postid'))
-        user =  users.get_current_user()
+        user = users.get_current_user()
         if not user:
             captcha = self.request.get('code')
             seq = self.request.get('seq')
@@ -72,12 +75,18 @@ class CommentInsert(webapp2.RequestHandler):
         if comment.homepage and not comment.homepage.startswith('http'):
             comment.homepage = 'http://' + comment.homepage
 
-        Comment.savecomment(comment)
+        commentid = Comment.savecomment(comment)
+
         if post.commentCount is None:
             post.commentCount = 0
         post.commentCount += 1
         Post.savepost(post)
-        show_json(self.response, {'state':0, 'msg':''})
+
+        taskqueue.add(url='/worker/comment', params={'postid': str(postid),
+                                                     "commentid": str(commentid.id())})
+
+        show_json(self.response, {'state': 0, 'msg': ''})
+
 
 class CommentDelete(webapp2.RequestHandler):
     def post(self):

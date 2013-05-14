@@ -59,6 +59,8 @@ We all end up dead, the question is how and why.
 数萼初含雪，孤标画本难。香中别有韵，清极不知寒。横笛和愁听，斜枝倚病看。朔风如解意，容易莫摧残。"""
 
 _fortune_list = [line.strip() for line in _fortunes.split('\n')]
+
+
 def rand_fortune():
     idx = random.randint(0, len(_fortune_list)-1)
     return _fortune_list[idx]
