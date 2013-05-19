@@ -20,7 +20,7 @@ def urlEncode(text):
     return urllib.quote(text.encode('utf-8'))
 
 
-def encodeTag(tag):
+def encodetag(tag):
     if not tag:
         return tag
     return urllib.quote(tag.encode('utf-8')).replace('/', '%252F')
@@ -89,9 +89,16 @@ def format_datetime(date):
     return date.strftime('%Y-%m-%d %H:%M')
 
 
+def substring_before(str, dem):
+    idx = str.find(dem)
+    if idx < 0:
+        return str
+    return str[0:idx]
+
 # for jinja filters
 jinja_environment.filters['datetime'] = format_datetime
-jinja_environment.filters['tag'] = encodeTag
+jinja_environment.filters['tag'] = encodetag
+jinja_environment.filters['before'] = substring_before
 
 
 # for jinja functions

@@ -1,8 +1,15 @@
 <div class="block">
+    <link rel="stylesheet" type="text/css" href="/styles/tipTip.css" />
+    <script type="text/javascript" src="/scripts/jquery.tipTip.js"></script>
+    <script>
+        $(function(){
+            $(".cloud_tag").tipTip({delay:10});
+        });
+    </script>
     <div class="header"  id="taghead">标签</div>
-    <div id=recenttagcontent style="padding-bottom:9px;">
+    <div id=recenttagcontent style="padding:5px 0 7px;">
             {% for tag in get_alltags() %}
-            <a href="/post/list/{{ tag.name | tag }}/" class="cloud_tag">{{tag.name}}[{{tag.count}}]</a>
+            <a href="/post/list/{{ tag.name | tag }}/" class="cloud_tag" title="共{{tag.count}}篇文章">{{tag.name}}</a>
             {% endfor %}
             <div style="clear:both;"></div>
     </div>

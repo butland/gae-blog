@@ -3,10 +3,8 @@
     <div class="content" id="commentcontent">
         <ul class="block_ul">
             {% for comment in get_recent_comments() %}
-            <li style="padding-top:5px;list-style:circle;">
-                <a href="/post/{{comment.postId}}#c{{comment.key.id()}}">{{comment.username}} on {{get_post_title(comment.postId)}}</a>
-            </li>
             <li>
+                <a href="/post/{{comment.postId}}#c{{comment.key.id()}}">{{comment.username}} on {{get_post_title(comment.postId)}}</a> <br/>
                 {{ comment.content }}
             </li>
             {% endfor %}

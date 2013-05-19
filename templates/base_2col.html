@@ -17,19 +17,17 @@
         {% endif %}
 
         {# gonggao or something similar #}
-        {% if side_long %}
         {% include '/inc/talk.html' %}
-        {% endif %}
 
         {# tag cloud #}
-        {% if side_long %}
         {% include '/inc/tag_cloud.html' %}
-        {% endif %}
 
         {# recent post #}
         {% include '/inc/recent_posts.html' %}
 
+        {% if side_long%}
         {% include '/inc/recent_comments.html' %}
+        {% endif %}
 
         {% if side_long%}
         {# archive #}

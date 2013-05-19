@@ -49,7 +49,7 @@
         {% endfor %}
         {% if getuser() %}
             <li id="user_menu" class="{% if tab_admin %}focustab{% endif %}">
-                <a href="javascript:void(0)">{{ getuser().nickname() }}&darr;</a>
+                <a href="javascript:void(0)">{{ getuser().nickname() | before('@') }}&darr;</a>
             </li>
         {% else %}
             <li class=""><a href="/admin">登入</a></li>

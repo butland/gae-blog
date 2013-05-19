@@ -3,7 +3,7 @@
     <div class=content id=recentpostcontent>
         <ul class="block_ul">
             {% for post in get_recent_posts() %}
-            <li style="list-style: square;"><a href="/post/{{ post.key.id() }}">{{ post.title }}</a></li>
+            <li><a href="/post/{{ post.key.id() }}">{{ post.title }}</a></li>
             {% endfor %}
         </ul>
     </div>

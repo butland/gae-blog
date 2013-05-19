@@ -80,7 +80,7 @@
                 $(data.clist).each(function(i, comment){
                     $("#comments").append(constructComment(comment));
                 });
-                var html = '<div style="font-size:12px;padding-left:10px;">';
+                var html = '<div style="font-size:12px;padding-left:10px;margin-top:8px;">';
                 html += '共' + data.count + '条评论, 第' + data.page + '/' + data.pagecount + '页';
                 if(data.page > 1){
                     html += '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:void(0)" onclick="load_comment(' +
@@ -213,12 +213,6 @@ $(document).ready(function(){
         </div>
         {% endif %}
         <div class="post_body">{{ post.content }}</div>
-
-        {% if post.privilege != 2 %}
-        <div class="underinfo">
-            {% include '/inc/share.html' %}
-        </div>
-        {% endif %}
     </div>
 
     <div id="comments">

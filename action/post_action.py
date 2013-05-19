@@ -92,7 +92,7 @@ class PostList(webapp2.RequestHandler):
         pager = Pager(total, page, config["postnumperpage"])
 
         if tag:
-            base = '/post/list/' + encodeTag(tag.decode('utf-8')) + '/'
+            base = '/post/list/' + encodetag(tag.decode('utf-8')) + '/'
         elif archive:
             base = '/post/archive/' + archive + '/'
         else:
