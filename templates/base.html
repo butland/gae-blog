@@ -33,12 +33,11 @@
 
     <div id="search">
         <form method="get" action="/search">
-            <input type="search" size="25" name="query" value="{{ query }}" placeholder="搜索文章"/>
-            <input type="submit" value="搜索" style="border:1px solid #464646;margin-right:0;"/>
+            <input class="searchbox" type="text" size="40" name="query" value="{{ query }}" placeholder="搜索文章"/>
         </form>
     </div>
 
-    <div class=tabbar><ul class="tabul">
+    <div class="tabbar"><ul class="tabul">
         <li class="{% if tab_article %}focustab{% endif %}"><a href="/post">文章</a></li>
         {% if config.picasaalbumname %}
         <li class="{% if tab_album %}focustab{% endif %}"><a href="/album">相册</a></li>
@@ -48,11 +47,78 @@
         <a href="/post/{{ spost.key.id() }}">{{ spost.title }}</a>
         </li>
         {% endfor %}
-        {% if isadmin() %}
-        <li class="{% if tab_admin %}focustab{% endif %}"><a href="/admin">管理</a></li>
+        {% if getuser() %}
+            <li id="user_menu" class="{% if tab_admin %}focustab{% endif %}">
+                <a href="javascript:void(0)">{{ getuser().nickname() }}&darr;</a>
+            </li>
+        {% else %}
+            <li class=""><a href="/admin">登入</a></li>
         {% endif %}
     </ul></div>
 </div></div>
+
+{% if getuser() %}
+<div id="user_menu_div" class="nav_menu"><ul class="menuul">
+    {% if isadmin() %}
+        <li><a href="/admin">管理</a></li>
+    {% endif %}
+    <li><a href="/logout">注销</a></li>
+</ul></div>
+<script type="text/javascript">
+    var ori_width = $("#user_menu").width();
+    var tras_width = $("#user_menu_div").width();
+    if (tras_width < ori_width) {
+        tras_width = ori_width;
+    }
+    $(document).ready(function() {
+        $("#user_menu").hover(function() {
+            $(this).addClass("hoverflag");
+            var item = $(this);
+            $(this).stop().animate({
+                width : tras_width
+            }, 200, function(){
+                $("#user_menu_div").width(tras_width)
+                        .css("position","absolute").css('left', item.offset().left)
+                        .css('top', item.offset().top + item.height())
+                        .fadeIn('fast');
+            });
+        }, function() {
+            $(this).removeClass("hoverflag");
+            var item = $(this);
+            setTimeout(function(){
+                if (item.hasClass('hoverflag') || $("#user_menu_div").hasClass('hoverflag')) {
+                    return;
+                }
+                item.stop().animate({
+                    width : '' + ori_width
+                }, 200, function(){
+                    $("#user_menu_div").fadeOut('fast');
+                });
+            }, 100);
+
+        });
+
+        $("#user_menu_div").hover(function() {
+            $(this).addClass("hoverflag");
+        }, function(){
+            $(this).removeClass("hoverflag");
+            var item = $(this);
+            setTimeout(function(){
+                if (item.hasClass('hoverflag') || $("#user_menu").hasClass('hoverflag')) {
+                    return;
+                }
+                $("#user_menu").stop().animate({
+                    width : '' + ori_width
+                }, 200, function(){
+                    item.fadeOut('fast');
+                });
+            }, 100);
+        });
+
+    });
+</script>
+{% endif %}
+
 <div class="outer">
     {# 主体部分内容 #}
     {% block content %}{% endblock %}

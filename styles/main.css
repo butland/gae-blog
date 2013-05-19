@@ -59,7 +59,6 @@ div.outer {
 	margin: 0 auto;
 	max-width: 1020px;
 	padding: 0;
-	position: relative;
 }
 
 
@@ -87,15 +86,21 @@ span.description {
 }
 
 div#search { 
-	margin-top:3px;
 	float: right;
+    height: 30px;
+}
+
+input.searchbox {
+    border:none;
+    padding:0 4px 0 4px;
+    margin:4px 0 4px 0;
+    width:232px;
+    height:22px;
+    font-size: 14px;
 }
 
 div#header {
-	/*background-color: #E5ECF9;
-	border-top: 1px solid #3366CC;*/
-	background-color : #555;
-	padding-top: 15px;
+	background-color : #444;
 	height: 30px;
 	margin: 0;
 	width: 100%;
@@ -108,7 +113,6 @@ div.tabbar {
 }
 
 ul.tabul {
-	list-style-type: none;
 	list-style: none outside none;
 	display:block;
 	float:left;
@@ -117,10 +121,12 @@ ul.tabul {
 }
 
 ul.tabul li {
-	/* border-radius:5px 5px 0px 0px;
-	border:1px solid #C0C0C0; */
 	float: left;
-	margin: 2px 4px 0 0;
+	margin: 0 4px 0 0;
+}
+
+ul.tabul li:hover{
+    background-color: #888;
 }
 
 ul.tabul li.focustab {
@@ -128,15 +134,49 @@ ul.tabul li.focustab {
 }
 
 ul.tabul li a {
-	color: #CCC;
+	color: #DDD;
 	text-decoration: none;
-	height:28px;
-	line-height:28px;
-	padding:0 10px;
+	height:30px;
+	line-height:30px;
+	padding:0 6px;
+    display:block;
 }
 
 ul.tabul li.focustab a {
 	color: #222;
+}
+
+div.nav_menu {
+    position:absolute;top:10px;left:10px;
+    width: 100px;
+    margin: 0 auto;
+    display: none;
+}
+
+ul.menuul {
+    list-style: none outside none;
+    display:block;
+    margin: 0;
+    padding: 0;
+}
+
+ul.menuul li {
+    background-color : #555;
+    margin-right: 4px;
+}
+
+ul.menuul li:hover{
+    background-color: #888;
+}
+
+ul.menuul li a {
+    color: #DDD;
+    text-decoration: none;
+    height:30px;
+    line-height:30px;
+    padding:0 6px;
+    display: block;
+    width: 100%;
 }
 
 div#toolbar {
