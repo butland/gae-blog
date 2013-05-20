@@ -107,15 +107,16 @@ input.searchbox {
 }
 
 input.button {
-    background-color:#ededed;
-    border-radius:6px;
+    background-color: #e4e4e4;
+    border-radius:3px;
     border:1px solid #dcdcdc;
     font-size:14px;
-    padding:6px 10px;
+    padding:6px 14px;
 }
 
 input.button:hover {
     cursor: pointer;
+    background-color: #cdcdcd;
 }
 
 div#header {

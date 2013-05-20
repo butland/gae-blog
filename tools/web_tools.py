@@ -89,6 +89,12 @@ def format_datetime(date):
     return date.strftime('%Y-%m-%d %H:%M')
 
 
+def format_datetime_local(date):
+    """used with html5 datetime-local input type"""
+    date = date + timedelta(hours=8)
+    return date.strftime('%Y-%m-%dT%H:%M:%S')
+
+
 def substring_before(str, dem):
     idx = str.find(dem)
     if idx < 0:
@@ -97,6 +103,7 @@ def substring_before(str, dem):
 
 # for jinja filters
 jinja_environment.filters['datetime'] = format_datetime
+jinja_environment.filters['datetimelocal'] = format_datetime_local
 jinja_environment.filters['tag'] = encodetag
 jinja_environment.filters['before'] = substring_before
 

@@ -3,7 +3,6 @@
 {% block title %} - 修改文章 {% endblock %}
 {% block script %}
     <script type="text/javascript" src="/scripts/redactor/redactor.min.js"></script>
-    <script type="text/javascript" src="/scripts/My97DatePicker/WdatePicker.js"></script>
     <script type="text/javascript" src="/scripts/jquery.ui.autobox/jquery.templating.js"></script>
     <script type="text/javascript" src="/scripts/jquery.ui.autobox/jquery.ui.autobox.ext.js"></script>
     <script type="text/javascript" src="/scripts/jquery.ui.autobox/jquery.ui.autobox.js"></script>
@@ -71,12 +70,12 @@
     <textarea name="content" id="content" style="height: 580px;" >{{ post.content }}</textarea>
     <br />
     <div style="" id="option">
-        日期：<input name="pubdate" id="pubdate" type=text size=16 value="{{ post.date|datetime }}" />
-        <img align="absmiddle" onclick="WdatePicker({el:'pubdate',dateFmt:'yyyy-MM-dd HH:mm'})" style="cursor: pointer;" src="/scripts/My97DatePicker/skin/datePicker.gif"/>
+        {# remove datepicker, use html datetime, wait chrome, firefox, ie, safari to implement it.. #}
+        日期：<input name="pubdate" id="pubdate" type=datetime-local size=20 value="{{ post.date|datetimelocal }}" />
         权限：<input type=radio name=privilege value=1 {% if post.privilege == 1 %}checked{% endif %} />公开
         <input type=radio name=privilege value=0 {% if post.privilege == 0 %}checked{% endif %} />隐藏
         <input type=radio name=privilege value=2 {% if post.privilege == 2 %}checked{% endif %} />置顶
     </div>
-    <input type="submit" value="提交" />
+    <input type="submit" class="button" value="提交" />
     </form>
 {% endblock %}
