@@ -2,18 +2,22 @@
 
 {% block title %} - 修改文章 {% endblock %}
 {% block script %}
-    <script type="text/javascript" src="/scripts/ckeditor/ckeditor.js"></script>
+    <script type="text/javascript" src="/scripts/redactor/redactor.min.js"></script>
     <script type="text/javascript" src="/scripts/My97DatePicker/WdatePicker.js"></script>
     <script type="text/javascript" src="/scripts/jquery.ui.autobox/jquery.templating.js"></script>
     <script type="text/javascript" src="/scripts/jquery.ui.autobox/jquery.ui.autobox.ext.js"></script>
     <script type="text/javascript" src="/scripts/jquery.ui.autobox/jquery.ui.autobox.js"></script>
     <link rel="stylesheet" href="/scripts/jquery.ui.autobox/jquery.ui.autobox.css" type="text/css" media="screen" />
+    <link rel="stylesheet" href="/styles/redactor.css" type="text/css" />
 
-    {# fckeditor #}
+    {# init editor #}
     <script type="text/javascript">
-        window.onload = function(){
-            CKEDITOR.replace('content');
-        }
+        $(function () {
+            $('#content').redactor({
+                imageUpload: '/file/upload?type=redactor_img',
+                fileUpload: '/file/upload?type=redactor_file'
+            });
+        });
     </script>
 
     {# tag input #}
@@ -64,7 +68,7 @@
     <div style="font-size:16px;margin-bottom:5px;"> <span style="float:left;">标签：</span>
         <input type="text" class="autobox 1" name="tags" />
     </div>
-    <textarea name="content" id="content" style="width:80%;height:800px;" >{{ post.content }}</textarea>
+    <textarea name="content" id="content" style="height: 580px;" >{{ post.content }}</textarea>
     <br />
     <div style="" id="option">
         日期：<input name="pubdate" id="pubdate" type=text size=16 value="{{ post.date|datetime }}" />

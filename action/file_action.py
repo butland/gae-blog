@@ -37,21 +37,25 @@ class FileUpload(webapp2.RequestHandler):
     def post(self):
         if not users.is_current_user_admin():
             return
-        ckfunc = self.request.get("CKEditorFuncNum")
-        #fileinfo = self.request.POST.get("upload_file")
-        fileinfo = self.request.POST.multi['upload']
+        utype = self.request.get("type")
+        fileinfo = self.request.POST.multi['file']
         file = File()
         file.fileName = fileinfo.filename
         file.mimeType = fileinfo.type
         file.content = fileinfo.value
         file.date = datetime.today()
         fileid = File.savefile(file).id()
-        if ckfunc:
-            # for ckeditor call back
+        if utype == 'redactor_img':
+            # for redactor call back
             self.response.headers["Content-Type"] = "text/html; charset=UTF-8"
             self.response.headers["Cache-Control"] = "no-cache";
-            self.response.write('<script type="text/javascript">window.parent.CKEDITOR.tools.callFunction('
-                    + ckfunc + ",'/showfile/" + str(fileid) + "','')" + "</script>")
+
+            self.response.write('{"filelink": "/showfile/%d"}' % fileid)
+        elif utype == 'redactor_file':
+            # for redactor call back
+            self.response.headers["Content-Type"] = "text/html; charset=UTF-8"
+            self.response.headers["Cache-Control"] = "no-cache";
+            self.response.write('{ "filelink": "/showfile/%d", "filename": "%s" }' % (fileid, fileinfo.filename))
         else:
             self.redirect('/admin/file')
 
