@@ -92,7 +92,7 @@ def format_datetime(date):
 def format_datetime_local(date):
     """used with html5 datetime-local input type"""
     date = date + timedelta(hours=8)
-    return date.strftime('%Y-%m-%dT%H:%M:%S')
+    return date.strftime('%Y-%m-%dT%H:%M')
 
 
 def substring_before(str, dem):

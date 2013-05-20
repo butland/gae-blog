@@ -2,11 +2,13 @@ __author__ = 'dongliu'
 from google.appengine.api import memcache
 from db.group_db import *
 
+
 def tostr(arg):
     if type(arg) == type(u''):
         return arg.encode('utf-8')
     else:
         return str(arg)
+
 
 def _get_key(group, name, args, kwargs):
     # for get by id cache
@@ -19,6 +21,7 @@ def _get_key(group, name, args, kwargs):
     dkeys.sort()
     key += '#' + '-'.join([dkey + '_' + str(kwargs[dkey]) for dkey in dkeys])
     return key
+
 
 def cache(group):
     def _cache(function):
@@ -34,23 +37,27 @@ def cache(group):
         return wrapper
     return _cache
 
+
 def evictgroup(group):
     def _evictgroup(function):
         def wrapper(*args, **kwargs):
-            Group.increase(group)
             value = function(*args, **kwargs)
+            Group.increase(group)
             return value
         return wrapper
     return _evictgroup
+
 
 def evict(name):
     def _evict(function):
         def wrapper(*args, **kwargs):
             key = _get_key("", name, args, kwargs)
             value = function(*args, **kwargs)
+            memcache.delete(key)
             return value
         return wrapper
     return _evict
+
 
 def evictid(name):
     def _evict(function):

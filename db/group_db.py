@@ -31,5 +31,5 @@ class Group(ndb.Model):
         else:
             g = Group(id=group)
             g.count = 1
-        g.put()
         memcache.set(key, g.count)
+        g.put()

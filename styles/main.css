@@ -424,7 +424,7 @@ blockquote{
 }
 
 div.commentavatar {
-	vertical-align:middle;
+	vertical-align:top;
 	display: table-cell;
 	width:140px;
 	text-align: center;

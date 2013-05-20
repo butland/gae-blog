@@ -189,7 +189,7 @@ class PostUpdate(webapp2.RequestHandler):
         post.content = self.request.get('content')
         post.tags = [ tag for tag in self.request.POST.getall('tags') if tag ]
         post.privilege = int(self.request.get('privilege'))
-        post.date = datetime.strptime(self.request.get('pubdate'), '%Y-%m-%dT%H:%M:%S') - timedelta(hours=8)
+        post.date = datetime.strptime(self.request.get('pubdate'), '%Y-%m-%dT%H:%M') - timedelta(hours=8)
         newid = Post.savepost(post)
         on_post_change(opost, post)
         self.redirect('/post/' + str(newid.id()))

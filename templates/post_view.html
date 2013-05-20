@@ -25,7 +25,7 @@
 </script>
 
 <script id="comment_template" type="text/template">
-    <div class="comment">
+    <div class="comment" id="c{{=it.id }}">
         <div class="commentavatar"><img src="{{=it.avatar}}" /><br />
             <span id="u_{{=it.id }}">{{=it.username}}</span>
         </div>
@@ -88,6 +88,11 @@
                 var doTtmpl = doT.template(tmpl);
                 var html = doTtmpl(data);
                 $("#comments").append(html);
+                var topos = window.location.hash;
+                if (topos) {
+                    $.scrollTo(topos, 200);
+                    window.location.hash = '';
+                }
             },
             complete: function(){
                 //HideLoading();
@@ -117,7 +122,7 @@
         $("#replyto").val(id);
         $("#replyname").html($("#u_"+id).html());
         $("#replytext").show();
-        $.scrollTo("#newcomment", 800);
+        $.scrollTo("#newcomment", 500);
     }
 
     function removeReply(){
@@ -176,7 +181,7 @@ $(document).ready(function(){
                 load_comment(1);
                 form.content.value = "";
                 removeReply();
-                $.scrollTo("#comments", 800);
+                $.scrollTo("#comments", 500);
             } else {
                 alert('评论发表失败:' + result.msg);
             }
