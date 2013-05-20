@@ -8,20 +8,6 @@ from tools.web_tools import *
 from tools.pager_tool import *
 from google.appengine.api import users
 
-class Admin(webapp2.RequestHandler):
-    def get(self):
-        user = users.get_current_user()
-        if user is None:
-            self.redirect('/login')
-        elif not users.is_current_user_admin():
-            #TODO:不是管理员用户
-            pass
-        else:
-            template_values = {
-                "user": user,
-            }
-            show_html(self.response, 'admin/admin.html', template_values)
-
 
 class AdminConfig(webapp2.RequestHandler):
     def get(self):

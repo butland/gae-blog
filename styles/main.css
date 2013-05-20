@@ -423,7 +423,7 @@ blockquote{
 }
 
 div.commentavatar {
-	vertical-align:top;
+	vertical-align:middle;
 	display: table-cell;
 	width:140px;
 	text-align: center;

@@ -9,63 +9,64 @@
 {% block title %} - {{ post.title }} {% endblock %}
 {% block script %}
 <script type="text/javascript" src="/scripts/jquery.scrollTo.js"></script>
+<script type="text/javascript" src="/scripts/doT.js"></script>
+
+{% raw %}
+<script id="pager_template" type="text/template">
+    <div style="font-size:12px;padding-left:10px;margin-top:8px;">
+        共 {{=it.count}} 条评论, 第 {{=it.page}}/{{=it.pagecount}} 页
+        {{ if(it.page > 1){ }}
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:void(0)" onclick="load_comment({{=it.page-1}})">&lt;&lt;上一页</a>
+        {{ } }}
+        {{ if(it.page < it.pagecount){ }}
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:void(0)" onclick="load_comment({{=it.page+1}})">下一页&gt;&gt;</a>
+        {{ } }}
+    </div>
+</script>
+
+<script id="comment_template" type="text/template">
+    <div class="comment">
+        <div class="commentavatar"><img src="{{=it.avatar}}" /><br />
+            <span id="u_{{=it.id }}">{{=it.username}}</span>
+        </div>
+        <div class="commentright"  id="c {{=it.id }} ">
+            <div class="commenttitle">
+                {{=it.date }}
+                {{ if(it.homepage!=null && it.homepage!=""){ }}
+                    | <a href="{{=it.homepage}}" target="_blank">主页</a>
+                {{ } }}
+                {{ if(it.admin){ }} 
+                    |  {{=it.email }}  |  {{=it.ip }} 
+                {{ } }}
+            </div>
+
+            {{ if(it.parentContent) { }}
+                <div class="quote"><div class="commentavatar"><img src="{{=it.parentContent.avatar}}" /><br />
+                    {{=it.parentContent.username}}
+                </div><div class="commentright"><div class="commenttitle">
+                    {{=it.parentContent.date }}
+                    {{ if(it.parentContent.homepage!=null && it.parentContent.homepage!=""){ }}
+                        | <a href="{{=it.parentContent.homepage}}" target="_blank">主页</a>
+                    {{ } }}
+                </div>
+
+                <div class=commenbody>{{=it.parentContent.content }}</div><div>
+                </div></div></div>
+            {{ } }}
+
+            <div class=commenbody>{{=it.content }}</div>
+            <div>
+                <a href="javascript:void(0)" onclick="replyComment('{{=it.id }}')">回复</a>
+                {{ if(it.admin){ }}
+                | <a href="javascript:void(0);"  onclick="delete_comment( {{=it.id }} )">删除</a>
+                {{ } }}
+            </div>
+        </div>
+    </div>
+</script>
+{% endraw %}
+
 <script type="text/javascript">
-
-    function constructPCommnet(comment){
-        if(comment == null){
-            return '';
-        }
-        var html = '<div class="quote"><div class="commentavatar"><img src="' + comment.avatar + '" /><br />';
-        if(comment.homepage!=null && comment.homepage!=''){
-            html += '<a href="' + comment.homepage + '" target="_blank">';
-        }
-        if(comment.anonymous){
-            html += '游客:';
-        }
-        html += comment.username;
-        if(comment.homepage!=null && comment.homepage!=''){
-            html += '</a>';
-        }
-        html += '</div><div class="commentright"><div class="commenttitle">';
-        html += comment.date;
-        if(comment.admin){
-            html += ' | ' + comment.email + ' | ' + comment.ip;
-        }
-        html += '</div>';
-
-        html += '<div class=commenbody>' + comment.content + '</div><div>';
-        html += '<a href="javascript:void(0)" onclick="replyComment(\'' + comment.id + '\')">回复</a>';
-        html += '</div></div></div>';
-        return html;
-    }
-
-    function constructComment(comment){
-        var html = '<div class="comment"><div class="commentavatar"><img src="' + comment.avatar + '" /><br />';
-        if(comment.homepage!=null && comment.homepage!=''){
-            html += '<a href="' + comment.homepage + '" target="_blank">';
-        }
-        html += '<span id="u_' + comment.id + '">' + comment.username + '</span>';
-        if(comment.homepage!=null && comment.homepage!=''){
-            html += '</a>';
-        }
-        html += '</div><div class="commentright"  id="c' + comment.id + '"><div class="commenttitle">';
-        html += comment.date;
-        if(comment.admin){
-            html += ' | ' + comment.email + ' | ' + comment.ip;
-        }
-        html += '</div>';
-
-        html += constructPCommnet(comment.parentContent);
-
-        html += '<div class=commenbody>' + comment.content + '</div><div>';
-        html += '<a href="javascript:void(0)" onclick="replyComment(\'' + comment.id + '\')">回复</a>';
-        if(comment.admin || comment.cuser == '${user.userId}'){
-            html += ' | <a href="javascript:void(0);"  onclick="delete_comment(' + comment.id + ')">删除</a>';
-        }
-        html += '</div></div></div>';
-        return html;
-    }
-
     function load_comment(page){
         var url = "/comment/{{ post.key.id() }}/" + page;
         $.ajax({
@@ -77,20 +78,15 @@
             },
             success: function(data){
                 $("#comments").html("");
+                var ctmpl = document.getElementById('comment_template').innerHTML;
+                var cdoTtmpl = doT.template(ctmpl);
                 $(data.clist).each(function(i, comment){
-                    $("#comments").append(constructComment(comment));
+                    var chtml = cdoTtmpl(comment);
+                    $("#comments").append(chtml);
                 });
-                var html = '<div style="font-size:12px;padding-left:10px;margin-top:8px;">';
-                html += '共' + data.count + '条评论, 第' + data.page + '/' + data.pagecount + '页';
-                if(data.page > 1){
-                    html += '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:void(0)" onclick="load_comment(' +
-                            (data.page-1) + ')">&lt;&lt;上一页</a>';
-                }
-                if(data.page < data.pagecount){
-                    html += '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:void(0)" onclick="load_comment(' +
-                            (data.page+1) + ')">下一页&gt;&gt;</a>';
-                }
-                html += '</div>';
+                var tmpl = document.getElementById('pager_template').innerHTML;
+                var doTtmpl = doT.template(tmpl);
+                var html = doTtmpl(data);
                 $("#comments").append(html);
             },
             complete: function(){
@@ -191,6 +187,7 @@ $(document).ready(function(){
 });
 </script>
 {% endblock %}
+
 
 {% block main %}
     {# 文章区域 #}

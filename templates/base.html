@@ -48,11 +48,11 @@
         </li>
         {% endfor %}
         {% if getuser() %}
-            <li id="user_menu" class="{% if tab_admin %}focustab{% endif %}">
+            <li id="user_menu">
                 <a href="javascript:void(0)">{{ getuser().nickname() | before('@') }}&darr;</a>
             </li>
         {% else %}
-            <li class=""><a href="/admin">登入</a></li>
+            <li class=""><a href="/login">登入</a></li>
         {% endif %}
     </ul></div>
 </div></div>
@@ -60,7 +60,9 @@
 {% if getuser() %}
 <div id="user_menu_div" class="nav_menu"><ul class="menuul">
     {% if isadmin() %}
-        <li><a href="/admin">管理</a></li>
+        <li><a href="/post/edit">发表文章</a></li>
+        <li><a href="/admin/file">管理文件</a></li>
+        <li><a href="/admin/config">设置</a></li>
     {% endif %}
     <li><a href="/logout">注销</a></li>
 </ul></div>
