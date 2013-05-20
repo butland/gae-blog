@@ -32,8 +32,11 @@ app = webapp2.WSGIApplication([('/', PostList), ('/post', PostList),
                             ('/search/ajax', SearchAjax),
                             ('/feed', Feed),
                             ('/feed/([^/]+)', Feed),
+                            # /feed/tag/ compat with old routine
+                            ('/feed/tag/([^/]+)', Feed),
                             ('/captcha', Captcha),
                             ('/captcha/check', CaptchaCheck),
+                            # /showimage/ compat with old routine
                             ('/showimage/(\d+)', FileShow),
                             ('/showfile/(\d+)', FileShow),
                             ('/file/upload', FileUpload),

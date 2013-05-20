@@ -124,10 +124,10 @@ class PostDetail(webapp2.RequestHandler):
         postid = int(postidStr)
         post = Post.getpost(postid)
         if post is None:
-            self.response.error(404)
+            self.error(404)
             return
         if post.privilege <= 0 and not users.is_current_user_admin():
-            self.response.error(404)
+            self.error(404)
             return
         seq = "%s%s" % (time(), random.randint(10000, 99999))
         template_values = {
