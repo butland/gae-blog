@@ -9,7 +9,7 @@ class Configure(ndb.Model):
     value = ndb.StringProperty(indexed=False)
 
 
-def setdict(pdict, name ,value):
+def setdict(pdict, name, value):
     ovalue = pdict[name]
     if type(ovalue) == type(1):
         pdict[name] = int(value)

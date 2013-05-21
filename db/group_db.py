@@ -4,8 +4,10 @@ __author__ = 'dongliu'
 from google.appengine.ext import ndb
 from google.appengine.api import memcache
 
+
 class Group(ndb.Model):
-    count = ndb.IntegerProperty(indexed = False)
+    """simulate cache group use memcached and database"""
+    count = ndb.IntegerProperty(indexed=False)
 
     @staticmethod
     def get_group_count(group):

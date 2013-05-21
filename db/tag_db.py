@@ -17,7 +17,7 @@ NAME_ALLPOST = "postnum"
 class Tag(ndb.Model):
     cid = ndb.StringProperty()
     name = ndb.StringProperty()
-    count = ndb.IntegerProperty(indexed = False)
+    count = ndb.IntegerProperty(indexed=False)
 
     @staticmethod
     @cache(group="tag")

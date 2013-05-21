@@ -3,6 +3,7 @@ __author__ = 'dongliu'
 from google.appengine.ext import ndb
 from tools.decorators import *
 
+
 class File(ndb.Model):
     fileName = ndb.StringProperty(indexed=False)
     mimeType = ndb.StringProperty(indexed=False)
@@ -19,10 +20,10 @@ class File(ndb.Model):
     @cache(group="file")
     def count():
         q = File.query()
-        return q.count(limit = 1000)
+        return q.count(limit=1000)
 
     @staticmethod
-    @cache(group="")
+    @cache()
     def getfile(fileid):
         return File.get_by_id(fileid)
 

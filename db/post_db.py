@@ -15,19 +15,19 @@ PRIVILEGE_SPIN = 2
 
 
 class Post(ndb.Model):
-    title = ndb.StringProperty(indexed = False)
-    date = ndb.DateTimeProperty(auto_now_add = False)
-    author = ndb.UserProperty(indexed = False)
-    content = ndb.TextProperty(indexed = False)
+    title = ndb.StringProperty(indexed=False)
+    date = ndb.DateTimeProperty(auto_now_add=False)
+    author = ndb.UserProperty(indexed=False)
+    content = ndb.TextProperty(indexed=False)
     privilege = ndb.IntegerProperty()
-    last_modify_date = ndb.DateTimeProperty(auto_now_add = False)
-    last_modify_by = ndb.UserProperty(indexed = False)
+    last_modify_date = ndb.DateTimeProperty(auto_now_add=False)
+    last_modify_by = ndb.UserProperty(indexed=False)
     tags = ndb.StringProperty(repeated=True)
     commentCount = ndb.IntegerProperty()
 
     @staticmethod
     @cache(group="post")
-    def get_postlist(privilege, offset, limit, tag=None, archive=None):
+    def _get_postid_list(privilege, offset, limit, tag=None, archive=None):
         q = Post.query()
         q = q.filter(Post.privilege == privilege)
         if tag:
@@ -44,10 +44,18 @@ class Post(ndb.Model):
             q = q.filter(Post.date >= start_date)
             q = q.filter(Post.date < end_date)
         q = q.order(-Post.date)
-        return q.fetch(offset=offset, limit=limit)
+        return q.fetch(offset=offset, limit=limit, keys_only=True)
 
     @staticmethod
-    @cache(group="")
+    def get_postlist(privilege, offset, limit, tag=None, archive=None):
+        post_list = []
+        for postkey in Post._get_postid_list(privilege, offset, limit, tag, archive):
+            post = Post.getpost(postkey.id())
+            post_list.append(post)
+        return post_list
+
+    @staticmethod
+    @cache()
     def getpost(postid):
         return Post.get_by_id(postid)
 

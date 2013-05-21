@@ -23,7 +23,7 @@ def _get_key(group, name, args, kwargs):
     return key
 
 
-def cache(group):
+def cache(group=""):
     def _cache(function):
         def wrapper(*args, **kwargs):
             key = _get_key(group, function.__name__, args, kwargs)
@@ -32,13 +32,14 @@ def cache(group):
                 return value
             else:
                 value = function(*args, **kwargs)
-                memcache.set(key, value = value, time = 3600*24)
+                memcache.set(key, value=value, time=3600 * 24)
                 return value
         return wrapper
     return _cache
 
 
 def evictgroup(group):
+    """evict all group's cache"""
     def _evictgroup(function):
         def wrapper(*args, **kwargs):
             value = function(*args, **kwargs)
@@ -49,6 +50,7 @@ def evictgroup(group):
 
 
 def evict(name):
+    """evict specify cache, identyfy by args[0], that means id is the first arg"""
     def _evict(function):
         def wrapper(*args, **kwargs):
             key = _get_key("", name, args, kwargs)
@@ -60,6 +62,7 @@ def evict(name):
 
 
 def evictid(name):
+    """evict specify cache, identyfy by first arg's id property"""
     def _evict(function):
         def wrapper(*args, **kwargs):
             if args[0].key is not None:
