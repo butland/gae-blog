@@ -3,18 +3,20 @@
 {% block title %} - 修改文章 {% endblock %}
 {% block script %}
     <script type="text/javascript" src="/scripts/redactor/redactor.min.js"></script>
+    <script type="text/javascript" src="/scripts/redactor/highlight-plugin.js"></script>
     <script type="text/javascript" src="/scripts/jquery.ui.autobox/jquery.templating.js"></script>
     <script type="text/javascript" src="/scripts/jquery.ui.autobox/jquery.ui.autobox.ext.js"></script>
     <script type="text/javascript" src="/scripts/jquery.ui.autobox/jquery.ui.autobox.js"></script>
     <link rel="stylesheet" href="/scripts/jquery.ui.autobox/jquery.ui.autobox.css" type="text/css" media="screen" />
     <link rel="stylesheet" href="/styles/redactor.css" type="text/css" />
-
+    <link rel="stylesheet" type="text/css" href="/styles/highlight.css" />
     {# init editor #}
     <script type="text/javascript">
         $(function () {
             $('#content').redactor({
                 imageUpload: '/file/upload?type=redactor_img',
-                fileUpload: '/file/upload?type=redactor_file'
+                fileUpload: '/file/upload?type=redactor_file',
+                plugins: ['highlight']
             });
         });
     </script>

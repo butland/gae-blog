@@ -12,6 +12,7 @@ from action.feed_action import *
 from action.file_action import *
 from action.admin_action import *
 from action.worker_action import *
+from action.highlight_action import *
 
 app = webapp2.WSGIApplication([('/', PostList), ('/post', PostList),
                             webapp2.Route('/post/list/<pagenum:\d+>', handler=PostList, name='post-list'),
@@ -43,6 +44,7 @@ app = webapp2.WSGIApplication([('/', PostList), ('/post', PostList),
                             ('/file/delete', FileDelete),
                             ('/blob/show/([^/]+)', BlobShow),
                             ('/tools/fortune', Fortune),
+                            ('/tools/highlight', Highlighter),
                             ('/admin/config', AdminConfig),
                             ('/admin/file', AdminFile),
                             ('/worker/comment', CommentWorker),

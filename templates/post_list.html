@@ -9,6 +9,9 @@
     <link rel="alternate" type="application/rss+xml" title="{{ config.heading }}" href="/feed/{{ tag|tag }}" />
 {% endblock %}
 
+{% block script %}
+<link rel="stylesheet" type="text/css" href="/styles/highlight.css" />
+{% endblock %}
 
 {% block main %}
     <script type="text/javascript">
