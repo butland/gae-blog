@@ -7,8 +7,11 @@ RedactorPlugins.highlight = {
         var do_call_back = this.highlightCode;
         this.addBtn('highlight', 'Code HighLight', function(redactor_object, event, button_key) {
             var callback = $.proxy(function(){
+                var node = $('<span class="new-element"></span>')[0];
+                this.insertNodeAtCaret(node);
+//                var current = this.getCurrentNode();
                 $("#code_submit").click(function(){
-                    do_call_back(redactor_object);
+                    do_call_back(redactor_object, node);
                 });
             }, redactor_object);
 
@@ -21,13 +24,16 @@ RedactorPlugins.highlight = {
         });
     },
 
-    highlightCode: function(redactor_object) {
+    highlightCode: function(redactor_object, current) {
         var language = $("#language").val();
         var code = $("#code_content").val();
         $.post("/tools/highlight", { language: language, code: code },
             function (data, status) {
-                redactor_object.insertHtml(data);
+                $(current).replaceWith(data);
+                // when click the modal dialog's text area, the origin content-editor lose it's caret, so this does not work
+//                redactor_object.insertHtml(data);
                 redactor_object.modalClose();
+
             }
         );
     }
