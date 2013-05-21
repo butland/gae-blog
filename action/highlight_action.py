@@ -17,4 +17,4 @@ class Highlighter(webapp2.RequestHandler):
             return None
         lexer = get_lexer_by_name(language, stripall=True)
         self.response.headers["Content-Type"] = "text/html;charset=utf-8"
-        self.response.out.write(highlight(code, PythonLexer(), HtmlFormatter()))
+        self.response.out.write(highlight(code, lexer, HtmlFormatter()))
