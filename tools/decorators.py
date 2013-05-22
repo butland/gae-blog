@@ -32,7 +32,7 @@ def cache(group=""):
                 return value
             else:
                 value = function(*args, **kwargs)
-                memcache.set(key, value=value, time=3600 * 24)
+                memcache.set(key, value=value, time=3600 * 24 * 5)
                 return value
         return wrapper
     return _cache

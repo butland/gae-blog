@@ -1,6 +1,7 @@
 {% extends "/base_1col.html" %}
 
 {% block main %}
+<div style="padding:20px 10px 10px;">
 <style>
 label {
     display:inline-block;
@@ -20,6 +21,7 @@ label {
     <label for="heading">使用blobstore存储:</label><input id="blobEnable" name="blobEnable" type="checkbox" {% if config.blobEnable %}checked=checked{% endif %} />  <br />
     <label for="heading">picasa用户名:</label><input id="picasaalbumname" name="picasaalbumname" type="text" size=40 value="{{config.picasaalbumname}}" />  <br />
     <label for="gauid">GA分析id:</label><input id="gauid" name="gauid" type="text" size=40 value="{{config.gauid}}" />  <br />
-    <input type="submit" />
+    <input type="submit" class="button" />
 </form>
+</div>
 {% endblock %}

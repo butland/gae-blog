@@ -1,19 +1,18 @@
 {% extends "/base_1col.html" %}
 
 {% block main %}
-<form action="/file/upload" method="POST" enctype='multipart/form-data' >
-    <input type="file" name="file" size=50 />
-    <input type="submit" name="submit_file"/>
-</form>
-<table>
+<div style="margin:20px 0 10px 0;">
+<table class="thin_border" style="width:80%">
     <tr><th>文件名</th><th>mime-type</th><th>上传时间</th><th>操作</th></tr>
     {% for file in filelist %}
     <tr>
         <td><a href="/showfile/{{file.key.id()}}" target="_blank">{{file.fileName}}</a></td>
-        <td>{{file.mimeType}}</td><td>{{file.date|datetime}}</td>
-        <td><a href="/file/delete?fileid={{file.key.id()}}">删除</a></td>
+        <td>{{file.mimeType}}</td>
+        <td style="text-align: center;">{{file.date|datetime}}</td>
+        <td style="text-align: center;"><a href="/file/delete?fileid={{file.key.id()}}">删除</a></td>
     </tr>
     {% endfor %}
 </table>
+</div>
 {% include '/inc/pager.html' %}
 {% endblock %}
