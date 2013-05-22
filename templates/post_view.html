@@ -200,23 +200,30 @@ $(document).ready(function(){
     {# 文章区域 #}
     <div class="post" id="post_{{ post.key.id() }}">
         {% if post.privilege != 2 %}
-        <h1 class=title><a href="/post/{{ post.key.id() }}">{{ post.title }}</a></h1>
-        <div class="postinfo">
-                {{ post.date|datetime }} | {{ post.author.nickname() }}
-                {% if post.tags %}
-                | 标签:
-                {% for tag in post.tags %}
-                    <a href="/post/list/{{ tag | tag }}/">{{ tag }}</a>
-                    {% if not loop.last %},{% endif %}
-                {% endfor %}
+            <h1 class=title><a href="/post/{{ post.key.id() }}">{{ post.title }}</a></h1>
+            <div class="postinfo">
+                    {{ post.date|datetime }} | {{ post.author.nickname() }}
+                    {% if post.tags %}
+                    | 标签:
+                    {% for tag in post.tags %}
+                        <a href="/post/list/{{ tag | tag }}/">{{ tag }}</a>
+                        {% if not loop.last %},{% endif %}
+                    {% endfor %}
+                    {% endif %}
+                {% if isadmin() %}
+                | <a href="javascript:void(0);" onclick="deleteBlogPost('{{ post.key.id() }}', '{{ post.title }}');">删除</a>
+                | <a href="/post/edit?postid={{ post.key.id() }}">编辑</a>
                 {% endif %}
+            </div>
+            <div class="post_body">{{ post.content }}</div>
+        {% else %}
+            {{ post.content }}
             {% if isadmin() %}
-            | <a href="javascript:void(0);" onclick="deleteBlogPost('{{ post.key.id() }}', '{{ post.title }}');">删除</a>
+            <br /><a href="javascript:void(0);" onclick="deleteBlogPost('{{ post.key.id() }}', '{{ post.title }}');">删除</a>
             | <a href="/post/edit?postid={{ post.key.id() }}">编辑</a>
             {% endif %}
-        </div>
         {% endif %}
-        <div class="post_body">{{ post.content }}</div>
+
     </div>
 
     <div id="comments">
