@@ -3,6 +3,7 @@ __author__ = 'dongliu'
 
 from google.appengine.api import search
 from datetime import timedelta
+import re
 
 
 def addpost(post):
@@ -20,6 +21,35 @@ def addpost(post):
 def delpost(postid):
     doc_index = search.Index(name="article_index")
     doc_index.delete(str(postid))
+
+
+def _processkeys(content, keys):
+    for key in keys:
+        content = content.replace(key, '<em>' + key + '</em>')
+    return content;
+
+
+def _snippet(content, keys):
+    """work around for snippedted content"""
+    content_size = 180
+    start = 0
+    length = 0
+    content = content.strip()
+    pattern = re.compile(r'<[^<>]+>')
+    content = pattern.sub('', content)
+    for key in keys:
+        idx = content.find(key)
+        if idx > 0:
+            if len(key) > length:
+                start = idx
+                length = len(key)
+    if start > 10:
+        start -= 10
+    if len(content) > start + content_size:
+        content = content[start:start + content_size] + '...'
+    elif len(content) > content_size:
+        content = content[-content_size:-1] + "..."
+    return _processkeys(content, keys)
 
 
 def query(querystr, cursorstr, limit):
@@ -45,6 +75,7 @@ def query(querystr, cursorstr, limit):
     index = search.Index(name="article_index")
     results = index.search(query)
     list = []
+    keys = [key for key in querystr.split(' ') if len(key) > 0]
     for doc in results:
         postid = int(doc.doc_id)
         content = doc["content"][0].value
@@ -53,8 +84,8 @@ def query(querystr, cursorstr, limit):
         author = doc["author"][0].value
         list.append({
             'postid': postid,
-            'content': content,
-            'title': title,
+            'content': _snippet(content, keys),
+            'title': _processkeys(title, keys),
             'author': author,
             'date': (date + timedelta(hours=8)).strftime('%Y-%m-%d %H:%M'),
         })
