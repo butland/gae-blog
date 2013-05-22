@@ -15,6 +15,31 @@ jinja_environment = jinja2.Environment(
     loader=jinja2.FileSystemLoader(os.path.join(os.path.dirname(__file__), '../templates')))
 
 
+def subStr(str, length):
+    #str must be unicode
+    if str is None:
+        return None
+    if len(str) * 2 < length:
+        return str
+    pos = -1
+    curlen = 0
+    low = 0x4E00
+    high = 0x9FA5
+    for ch in str:
+        if low <= ord(ch) <= high:
+            curlen += 2
+        else:
+            curlen += 1
+        pos += 1
+        if curlen > length:
+            break
+    if pos >= len(str):
+        return str
+    if pos > 2:
+        pos -= 2
+    return str[0:pos] + '...'
+
+
 # url encode fuc for jinja
 def urlEncode(text):
     return urllib.quote(text.encode('utf-8'))
@@ -45,30 +70,6 @@ def get_alltags():
 
 
 def get_recent_comments():
-    def subStr(str, length):
-        #str must be unicode
-        if str is None:
-            return None
-        if len(str) * 2 < length:
-            return str
-        pos = -1
-        curlen = 0
-        low = 0x4E00
-        high = 0x9FA5
-        for ch in str:
-            if low <= ord(ch) <= high:
-                curlen += 2
-            else:
-                curlen += 1
-            pos += 1
-            if curlen > length:
-                break
-        if pos >= len(str):
-            return str
-        if pos > 2:
-            pos -= 2
-        return str[0:pos] + '...'
-
     comment_list = Comment.get_commentlist(0, Config()["recentcommentnum"])
     for comment in comment_list:
         comment.content = subStr(comment.content, 33*2)

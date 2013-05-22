@@ -4,6 +4,7 @@ __author__ = 'dongliu'
 from google.appengine.api import search
 from datetime import timedelta
 import re
+from tools.web_tools import subStr
 
 
 def addpost(post):
@@ -25,30 +26,30 @@ def delpost(postid):
 
 def _processkeys(content, keys):
     for key in keys:
-        content = content.replace(key, '<em>' + key + '</em>')
-    return content;
+        key_pattern = re.compile(re.escape(key), re.I)
+        content = key_pattern.sub(lambda x: '<em>%s</em>' % x.group(), content)
+    return content
 
 
 def _snippet(content, keys):
     """work around for snippedted content"""
-    content_size = 180
+    content_size = 100 * 2
     start = 0
     length = 0
     content = content.strip()
     pattern = re.compile(r'<[^<>]+>')
     content = pattern.sub('', content)
+    content_up = content.upper()
     for key in keys:
-        idx = content.find(key)
+        idx = content_up.find(key.upper())
         if idx > 0:
             if len(key) > length:
                 start = idx
                 length = len(key)
-    if start > 10:
-        start -= 10
-    if len(content) > start + content_size:
-        content = content[start:start + content_size] + '...'
-    elif len(content) > content_size:
-        content = content[-content_size:-1] + "..."
+    if start > 20:
+        start -= 20
+    content = content[start:]
+    content = subStr(content, content_size)
     return _processkeys(content, keys)
 
 
