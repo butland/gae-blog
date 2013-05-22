@@ -7,7 +7,7 @@ from tools.web_tools import *
 
 class SearchPage(webapp2.RequestHandler):
     def get(self):
-        show_html(self.response, 'search.html' , {"query":self.request.get('query')})
+        show_html(self.response, 'search.html', {"query": self.request.get('query')})
 
 
 class SearchAjax(webapp2.RequestHandler):

@@ -10,8 +10,8 @@ from tools.web_tools import *
 from tools import pinyin
 from datetime import datetime,timedelta,time
 from google.appengine.api import users
-from service import postindex
 import random
+from google.appengine.api import taskqueue
 
 
 def emptyPost():
@@ -36,7 +36,6 @@ def on_post_change(opost, post):
     """
     if is_post_public(opost):
         if is_post_public(post):
-            postindex.addpost(post)
             oarchive = (opost.date+timedelta(hours=8)).strftime('%Y-%m')
             archive = (post.date+timedelta(hours=8)).strftime('%Y-%m')
             if oarchive != archive:
@@ -49,7 +48,6 @@ def on_post_change(opost, post):
             for tag in tags:
                 Tag.increase(CID_TAG, tag)
         else:
-            postindex.delpost(opost.key.id())
             Tag.decrease(CID_COUNTER, NAME_ALLPOST)
             Tag.decrease(CID_ARCHIVE, (opost.date+timedelta(hours=8)).strftime('%Y-%m'))
             for tag in opost.tags:
@@ -58,7 +56,6 @@ def on_post_change(opost, post):
 
     else:
         if is_post_public(post):
-            postindex.addpost(post)
             Tag.increase(CID_COUNTER, NAME_ALLPOST)
             Tag.increase(CID_ARCHIVE, (post.date+timedelta(hours=8)).strftime('%Y-%m'))
             for tag in post.tags:
@@ -191,6 +188,7 @@ class PostUpdate(webapp2.RequestHandler):
         post.privilege = int(self.request.get('privilege'))
         post.date = datetime.strptime(self.request.get('pubdate'), '%Y-%m-%dT%H:%M') - timedelta(hours=8)
         newid = Post.savepost(post)
+        taskqueue.add(url='/worker/article', params={'postid': str(newid.id())})
         on_post_change(opost, post)
         self.redirect('/post/' + str(newid.id()))
 
@@ -212,4 +210,6 @@ class PostDelete(webapp2.RequestHandler):
             post.commentCount = 0
             Post.savepost(post)
             Comment.delete_comment_bypost(post.key.id())
+            taskqueue.add(url='/worker/article', params={'postid': postidstr})
+
         self.redirect('/')

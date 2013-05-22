@@ -5,12 +5,16 @@ from pygments import highlight
 from pygments.lexers import PythonLexer
 from pygments.formatters import HtmlFormatter
 from pygments.lexers import get_lexer_by_name
+from google.appengine.api import users
+
 
 
 class Highlighter(webapp2.RequestHandler):
     """output highlight code use pygments"""
 
     def post(self):
+        if not users.is_current_user_admin():
+            return
         language = self.request.get('language')
         code = self.request.get('code')
         if not language or not code:

@@ -48,6 +48,7 @@ app = webapp2.WSGIApplication([('/', PostList), ('/post', PostList),
                             ('/admin/config', AdminConfig),
                             ('/admin/file', AdminFile),
                             ('/worker/comment', CommentWorker),
+                            ('/worker/article', ArticleWorker),
                             ('/login', Login),
                             ('/logout', Logout),
                             ],debug=True)

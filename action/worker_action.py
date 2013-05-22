@@ -6,11 +6,14 @@ from db.comment_db import Comment
 from google.appengine.api import mail
 from google.appengine.api import app_identity
 from db.config_db import *
+from google.appengine.api import users
+from service import postindex
+from db.post_db import PRIVILEGE_SHOW
 
-
+#TODO:  we need auth, something as handlers's login: admin setting
 class CommentWorker(webapp2.RequestHandler):
     # when adding a new comment ,send mail notify to post's author.
-    def get(self, postid, commentid):
+    def get(self):
         self.post()
 
     def post(self):
@@ -38,3 +41,17 @@ class CommentWorker(webapp2.RequestHandler):
         message.to = post.author.email()
         message.html = body
         message.send()
+
+
+class ArticleWorker(webapp2.RequestHandler):
+    # when add/update/delete article ,update index.
+    def get(self):
+        self.post()
+
+    def post(self):
+        postid = int(self.request.get('postid'))
+        post = Post.getpost(postid)
+        if  post is not None and post.privilege == PRIVILEGE_SHOW:
+            postindex.addpost(post)
+        else:
+            postindex.delpost(postid)
