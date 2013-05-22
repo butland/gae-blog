@@ -32,7 +32,10 @@ _escape_html_table = {
     ord('>'): u'&gt;',
     ord('"'): u'&quot;',
     ord("'"): u'&#39;',
+    ord(" "): u'&nbsp;',
+    ord("\t"): u'&nbsp;&nbsp;&nbsp;&nbsp;',
 }
+
 
 def escape_html(text, table=_escape_html_table):
     """Escape &, <, > as well as single and double quotes for HTML."""
@@ -400,7 +403,7 @@ class HtmlFormatter(Formatter):
         self.linenostep = abs(get_int_opt(options, 'linenostep', 1))
         self.linenospecial = abs(get_int_opt(options, 'linenospecial', 0))
         self.nobackground = get_bool_opt(options, 'nobackground', False)
-        self.lineseparator = options.get('lineseparator', '\n')
+        self.lineseparator = options.get('lineseparator', '<br/>')
         self.lineanchors = options.get('lineanchors', '')
         self.linespans = options.get('linespans', '')
         self.anchorlinenos = options.get('anchorlinenos', False)
@@ -785,7 +788,8 @@ class HtmlFormatter(Formatter):
         individual lines, in custom generators. See docstring
         for `format`. Can be overridden.
         """
-        return self._wrap_div(self._wrap_pre(source))
+        # return self._wrap_div(self._wrap_pre(source))
+        return self._wrap_div(source)
 
     def format_unencoded(self, tokensource, outfile):
         """

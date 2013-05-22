@@ -16,7 +16,9 @@
             $('#content').redactor({
                 imageUpload: '/file/upload?type=redactor_img',
                 fileUpload: '/file/upload?type=redactor_file',
-                plugins: ['highlight']
+                plugins: ['highlight'],
+                convertDivs: false,
+                minHeight: 450
             });
         });
     </script>

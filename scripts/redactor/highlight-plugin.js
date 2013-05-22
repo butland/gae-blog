@@ -9,7 +9,6 @@ RedactorPlugins.highlight = {
             var callback = $.proxy(function(){
                 var node = $('<span class="new-element"></span>')[0];
                 this.insertNodeAtCaret(node);
-//                var current = this.getCurrentNode();
                 $("#code_submit").click(function(){
                     do_call_back(redactor_object, node);
                 });
@@ -29,7 +28,14 @@ RedactorPlugins.highlight = {
         var code = $("#code_content").val();
         $.post("/tools/highlight", { language: language, code: code },
             function (data, status) {
-                $(current).replaceWith(data);
+                var parent = $(current).parent();
+                var ptag = $(parent).get(0).tagName;
+                var text = $.trim($(parent).get(0).innerText);
+                if (ptag == 'P' && text != '') {
+                    $(current).replaceWith('</p>' + data + '<p>');
+                } else {
+                    $(current).replaceWith(data);
+                }
                 // when click the modal dialog's text area, the origin content-editor lose it's caret, so this does not work
 //                redactor_object.insertHtml(data);
                 redactor_object.modalClose();

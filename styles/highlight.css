@@ -1,5 +1,7 @@
 .highlight .hll { background-color: #ffffcc }
-.highlight  { background: #f8f8f8;padding:10px; }
+.highlight  { background: #f8f8f8 !important;padding:10px !important; font-family: monospace !important;}
+/* for redactor editor styles. */
+.redactor_editor div.highlight{ background: #f8f8f8 !important;padding:10px !important; font-family: monospace !important;}
 .highlight .c { color: #408080; font-style: italic } 
 .highlight .err { border: 1px solid #FF0000 } 
 .highlight .k { color: #008000; font-weight: bold } 
