@@ -31,6 +31,10 @@ class Photo(object):
         self.summary = ''
         self.src = ''
         self.thumbnail = ''
+        self.width = 0
+        self.height = 0
+        self.tb_height = 0
+        self.tb_width = 0
 
 
 def __geturl(url):
@@ -81,7 +85,11 @@ def get_album(userid, albumname):
         photo.summary = entry["summary"]["$t"]
         photo.src = entry["content"]["src"]
         photo.id = entry["gphoto$id"]["$t"]
-        photo.thumbnail = entry["media$group"]["media$thumbnail"][1]["url"]
+        photo.width = entry["gphoto$width"]["$t"]
+        photo.height = entry["gphoto$height"]["$t"]
+        photo.thumbnail = entry["media$group"]["media$thumbnail"][0]["url"]
+        photo.tb_height = entry["media$group"]["media$thumbnail"][0]["height"]
+        photo.tb_width = entry["media$group"]["media$thumbnail"][0]["width"]
         list.append(photo)
     album.list = list
     return album

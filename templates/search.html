@@ -1,6 +1,6 @@
 {% extends "base_2col.html" %}
 
-{% block title %} - 文章搜索{{query}} {% endblock %}
+{% block title %} - {{query}} 的搜索结果 {% endblock %}
 {% block script %}
 <script type="text/javascript" src="/scripts/doT.js"></script>
 
@@ -17,8 +17,8 @@
 <script type="text/javascript">
     var cursor = ''
     function load_result(){
-        var url = '/search/ajax?query={{query}}&cursor=' + cursor;
         var pagesize = 10;
+        var url = '/search/ajax?query={{query}}&cursor=' + cursor + '&pagesize=' + pagesize;
         $.ajax({
             type: "get",
             url: url,
@@ -28,7 +28,7 @@
             },
             success: function(data){
                 cursor = data.cursor==null?'':data.cursor;
-                $("#search_info").html('找到相关文章' + data.total + '篇');
+                $("#search_info").html('找到' + data.total + '篇相关文章');
                 var rlist = data.list;
                 var query = data.query;
                 var tmpl = document.getElementById('search_template').innerHTML;
@@ -92,7 +92,12 @@
         padding: 0 15px 10px;
     }
     div#search_info {
-        float:right;color: #444444;margin-bottom: 8px;
+        color: #444444;
+        margin-bottom: 8px;
+        background-color: #eeeeee;
+        border: 1px solid #ccc;
+        padding: 10px;
+
     }
     div#search_more {
         background-color: #eeeeee;
@@ -106,9 +111,8 @@
 {% endblock %}
 
 {% block main %}
+<div id='search_info'></div>
 <div class="container">
-    <div id='search_info'></div>
-    <div style="clear:both"></div>
     <div id='search_list'></div>
 </div>
 <div id='search_more'></div>

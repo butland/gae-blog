@@ -14,6 +14,6 @@ class SearchAjax(webapp2.RequestHandler):
     def get(self):
         query = self.request.get('query')
         cursor = self.request.get('cursor')
-        pagesize = 10
+        pagesize = int(self.request.get('pagesize'))
         result = postindex.query(query, cursor, pagesize)
         show_json(self.response, result)
