@@ -72,6 +72,7 @@ $(function () {
                 // http://tympanus.net/codrops/2011/09/12/elastislide-responsive-carousel/
                 $esCarousel.show().elastislide({
                     imageW: 72,
+                    border: 0,
                     onClick: function ($item) {
                         if (anim) return false;
                         anim = true;

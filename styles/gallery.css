@@ -63,14 +63,14 @@ ul.thumbs img {
 div.pagination {
     clear: both;
 }
-.es-carousel-wrapper{
+div.es-carousel-wrapper {
 	background: white;
 	padding:10px 27px;
 	border-radius: 10px;
 	position:relative;
 	box-shadow:0px 1px 3px rgba(0, 0, 0, 0.9);
 	position:relative;
-	margin-bottom:20px;
+	margin-bottom:10px;
 }
 .es-carousel{
 	overflow:hidden;
@@ -88,16 +88,14 @@ div.pagination {
     border: 1px solid #aaaaaa;
     background-color: #dedede;
 }
-.es-carousel ul li a{
+.es-carousel ul li a {
     height: 72px;
     width: 72px;
 	display:table-cell;
     text-align: center;
     vertical-align: middle;
-    border: none !important;
-    border-collapse: collapse;
-    padding: 0;
 	opacity:0.8;
+    line-height: 0;
 }
 .es-carousel ul li.selected {
     background-color: #9e9e9e;
@@ -135,10 +133,6 @@ div.pagination {
 	position:relative;
 	text-align:center;
 	line-height:0px;
-}
-.rg-image img{
-	max-height:100%;
-	max-width:100%;
 }
 .rg-image-nav a{
 	position:absolute;
