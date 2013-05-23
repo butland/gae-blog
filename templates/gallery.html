@@ -17,23 +17,7 @@
         <a href="#" id="rg-view-full" class="rg-view-full"></a>
         <a href="#" id="rg-view-thumbs" class="rg-view-thumbs rg-view-selected"></a>
     </div>
-    <div class="rg-thumbs">
-        <div class="es-carousel-wrapper">
-            <div class="es-nav">
-                <span class="es-nav-prev">Previous</span>
-                <span class="es-nav-next">Next</span>
-            </div>
-            <div class="es-carousel">
-                <ul>
-                    {% for photo in album.list %}
-                    <li><a href="#">
-                        <img src="{{photo.thumbnail}}" data-large="{{photo.src}}?imgmax=800" alt="{{photo.title}}" data-description="{{photo.summary}}" />
-                    </a></li>
-                    {% endfor %}
-                </ul>
-            </div>
-        </div>
-    </div>
+
     <div class="rg-image-wrapper" id="rg-image-wrapper">
         {% if album.size > 1 %}
         <div class="rg-image-nav">
@@ -45,6 +29,24 @@
         <div class="rg-loading"></div>
         <div class="rg-caption-wrapper">
             <div class="rg-caption" style="display:none;"></div>
+        </div>
+    </div>
+
+    <div class="rg-thumbs">
+        <div class="es-carousel-wrapper">
+            <div class="es-nav">
+                <span class="es-nav-prev">Previous</span>
+                <span class="es-nav-next">Next</span>
+            </div>
+            <div class="es-carousel">
+                <ul>
+                    {% for photo in album.list %}
+                        <li><a href="#">
+                            <img src="{{photo.thumbnail}}" data-large="{{photo.src}}?imgmax=800" alt="{{photo.title}}" data-description="{{photo.summary}}" />
+                        </a></li>
+                    {% endfor %}
+                </ul>
+            </div>
         </div>
     </div>
 </div>
