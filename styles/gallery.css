@@ -156,18 +156,13 @@ div.es-carousel-wrapper {
 .rg-image-nav a:hover{
 	opacity:0.8;
 }
-.rg-caption {
+div.rg-caption {
 	text-align:center;
-	margin-top:15px;
-	position:relative;
-}
-.rg-caption p {
-	font-size:11px;
 	letter-spacing:2px;
 	line-height:16px;
     color:white;
     font-size: 16px;
-	padding:0 15px;
+	padding:15px;
 }
 .rg-view {
 	height:30px;
