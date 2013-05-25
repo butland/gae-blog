@@ -1,8 +1,8 @@
 #encoding=utf-8
 
 import webapp2
-from db.post_db import *
-from db.config_db import *
+from db.postdb import *
+from db.configdb import *
 from tools import PyRSS2Gen
 
 

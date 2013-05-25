@@ -1,12 +1,12 @@
 #encoding=utf-8
 
 import webapp2
-from db.config_db import *
-from db.post_db import *
-from db.tag_db import *
-from db.comment_db import *
-from tools.pager_tool import *
-from tools.web_tools import *
+from db.configdb import *
+from db.postdb import *
+from db.tagdb import *
+from db.commentdb import *
+from tools.pagertool import *
+from tools.webtools import *
 from tools import pinyin
 from datetime import datetime,timedelta,time
 from google.appengine.api import users
@@ -195,9 +195,9 @@ class PostUpdate(webapp2.RequestHandler):
 
 class PostDelete(webapp2.RequestHandler):
     """
-    delete post.
+    delete a post.now it is implemented by mark the status to be PRIVILEGE_DEL.
     """
-    def get(self):
+    def post(self):
         if not users.is_current_user_admin():
             return
         postidstr = self.request.get('postid')
@@ -211,5 +211,6 @@ class PostDelete(webapp2.RequestHandler):
             Post.savepost(post)
             Comment.delete_comment_bypost(post.key.id())
             taskqueue.add(url='/worker/article', params={'postid': postidstr})
-
-        self.redirect('/')
+            show_json(self.response, {'state': 1, 'msg': '此文章不存在'})
+        else:
+            show_json(self.response, {'state': 0, 'msg': ''})

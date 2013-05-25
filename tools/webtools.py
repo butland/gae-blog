@@ -4,10 +4,10 @@ import jinja2
 import os
 import urllib
 from google.appengine.api import users
-from db.post_db import *
-from db.config_db import *
-from db.tag_db import *
-from db.comment_db import *
+from db.postdb import *
+from db.configdb import *
+from db.tagdb import *
+from db.commentdb import *
 from datetime import datetime, timedelta
 from decorators import *
 
@@ -86,12 +86,16 @@ def get_post_title(postid):
 
 
 def format_datetime(date):
+    if date is None:
+        return ''
     date = date + timedelta(hours=8)
     return date.strftime('%Y-%m-%d %H:%M')
 
 
 def format_datetime_local(date):
     """used with html5 datetime-local input type"""
+    if date is None:
+        return ''
     date = date + timedelta(hours=8)
     return date.strftime('%Y-%m-%dT%H:%M')
 

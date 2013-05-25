@@ -2,7 +2,7 @@
 
 import webapp2
 from google.appengine.api import users
-from db.config_db import *
+from db.configdb import *
 
 
 class Login(webapp2.RequestHandler):

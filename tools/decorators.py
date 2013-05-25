@@ -1,6 +1,6 @@
 __author__ = 'dongliu'
 from google.appengine.api import memcache
-from db.group_db import *
+from db.groupdb import *
 
 
 def tostr(arg):

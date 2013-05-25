@@ -1,9 +1,9 @@
 #encoding=utf-8
 
 import webapp2
-from db.post_db import *
-from db.comment_db import *
-from tools.web_tools import *
+from db.postdb import *
+from db.commentdb import *
+from tools.webtools import *
 from datetime import datetime,timedelta
 from google.appengine.api import memcache
 from google.appengine.api import users

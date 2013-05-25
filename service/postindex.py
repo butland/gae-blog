@@ -4,7 +4,7 @@ __author__ = 'dongliu'
 from google.appengine.api import search
 from datetime import timedelta
 import re
-from tools.web_tools import subStr
+from tools.webtools import subStr
 
 
 def addpost(post):

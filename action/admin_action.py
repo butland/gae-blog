@@ -2,10 +2,11 @@
 __author__ = 'dongliu'
 
 import webapp2
-from db.config_db import *
-from db.file_db import *
-from tools.web_tools import *
-from tools.pager_tool import *
+from db.configdb import *
+from db.filedb import *
+from db.postdb import *
+from tools.webtools import *
+from tools.pagertool import *
 from google.appengine.api import users
 
 
@@ -45,9 +46,30 @@ class AdminFile(webapp2.RequestHandler):
         pagesize = 20
         pager = Pager(total, page, pagesize)
         pager.setbase('/admin/file?page=')
-        file_list = File.get_files((page-1)*pagesize, pagesize)
+        filelist = File.get_files((page - 1) * pagesize, pagesize)
         template_values = {
-            "filelist": file_list,
+            "filelist": filelist,
             "pager": pager,
         }
         show_html(self.response, '/admin/file.html', template_values)
+
+
+class AdminPost(webapp2.RequestHandler):
+    """admin hidden post"""
+    def get(self):
+        if not users.is_current_user_admin():
+            return
+        try:
+            page = int(self.request.get('page'))
+        except:
+            page = 1
+        total = Post.count(PRIVILEGE_HIDE)
+        pagesize = 20
+        pager = Pager(total, page, pagesize)
+        pager.setbase('/admin/post?page=')
+        postlist = Post.get_postlist(PRIVILEGE_HIDE, (page - 1) * pagesize, pagesize)
+        template_values = {
+            "postlist": postlist,
+            "pager": pager,
+            }
+        show_html(self.response, '/admin/post.html', template_values)

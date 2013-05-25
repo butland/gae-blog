@@ -2,8 +2,8 @@
 
 import webapp2
 from service import picasa
-from db.config_db import *
-from tools.web_tools import *
+from db.configdb import *
+from tools.webtools import *
 
 
 class PicasaList(webapp2.RequestHandler):

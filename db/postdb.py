@@ -51,8 +51,18 @@ class Post(ndb.Model):
         post_list = []
         for postkey in Post._get_postid_list(privilege, offset, limit, tag, archive):
             post = Post.getpost(postkey.id())
+            if post is None:
+                post.key = postkey
+                post.title = 'not Found'
             post_list.append(post)
         return post_list
+
+    @staticmethod
+    @cache(group="post")
+    def count(privilege):
+        q = Post.query()
+        q = q.filter(Post.privilege == privilege)
+        return q.count(limit=99999)
 
     @staticmethod
     @cache()

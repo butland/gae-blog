@@ -17,7 +17,9 @@
     <script type="text/javascript">
         function deleteBlogPost(id, name){
             if(confirm("确定要删除  \"" + name + "\"?")){
-                window.location = "/post/delete?postid=" + id;
+                $.post("/post/delete", {postid:id}, function(data){
+                    location.reload();
+                });
             }
         }
     </script>

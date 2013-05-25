@@ -1,14 +1,14 @@
 #encoding=utf-8
 
 import webapp2
-from db.post_db import Post
-from db.comment_db import Comment
+from db.postdb import Post
+from db.commentdb import Comment
 from google.appengine.api import mail
 from google.appengine.api import app_identity
-from db.config_db import *
+from db.configdb import *
 from google.appengine.api import users
 from service import postindex
-from db.post_db import PRIVILEGE_SHOW
+from db.postdb import PRIVILEGE_SHOW
 
 #TODO:  we need auth, something as handlers's login: admin setting
 class CommentWorker(webapp2.RequestHandler):

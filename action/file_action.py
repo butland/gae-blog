@@ -2,11 +2,12 @@
 
 import webapp2
 import urllib
-from db.file_db import *
+from db.filedb import *
 from google.appengine.ext.blobstore import blobstore
 from google.appengine.ext.webapp import blobstore_handlers
 from google.appengine.api import users
 from datetime import datetime
+from tools.webtools import show_json
 
 CACHE_DURATION = 30 * 24 * 60 * 60 * 1000
 
@@ -24,12 +25,12 @@ class FileShow(webapp2.RequestHandler):
             self.response.status = 304
             return
 
-#        filename = file.fileName
-#        if filename:
-#            idx = filename.rfind('/')
-#            if idx > 0:
-#                filename = filename[idx+1:]
-#        self.response["Content-Disposition"] =  "inline; filename=" + urllib.quote(filename.encode("utf-8"))
+        filename = file.fileName
+        if filename:
+            idx = filename.rfind('/')
+            if idx > 0:
+                filename = filename[idx + 1:]
+        self.response.headers["Content-Disposition"] = "inline; filename=" + urllib.quote(filename.encode("utf-8"))
         self.response.write(file.content)
 
 
@@ -57,15 +58,16 @@ class FileUpload(webapp2.RequestHandler):
             self.response.headers["Cache-Control"] = "no-cache";
             self.response.write('{ "filelink": "/showfile/%d", "filename": "%s" }' % (fileid, fileinfo.filename))
         else:
+            # now it is not used.
             self.redirect('/admin/file')
 
 
 class FileDelete(webapp2.RequestHandler):
-    def get(self):
+    def post(self):
         fileid = int(self.request.get("fileid"))
         file = File.getfile(fileid)
         File.delfile(file)
-        self.redirect('/admin/file')
+        show_json(self.response, {'state': 0, 'msg': ''})
 
 
 class BlobShow(blobstore_handlers.BlobstoreDownloadHandler):

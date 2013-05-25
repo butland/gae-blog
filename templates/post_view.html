@@ -108,14 +108,18 @@
 
     //{% if isadmin() %}
     function delete_comment(cid){
-        $.post("/comment/delete", {commentid:cid}, function(){
-            load_comment(1);
-        });
+        if(confirm("确定要删除评论?")){
+            $.post("/comment/delete", {commentid:cid}, function(){
+                load_comment(1);
+            });
+        }
     }
 
     function deleteBlogPost(id, name){
-        if(confirm("确定要删除  \"" + name + "\"?")){
-            window.location = "/post/delete?postid=" + id;
+        if(confirm("确定要删除「" + name + "」?")){
+            $.post("/post/delete", {postid:id}, function(data){
+                window.location.href = '/';
+            });
         }
     }
     //{% endif %}
