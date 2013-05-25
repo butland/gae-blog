@@ -4,16 +4,18 @@
 
     <span><a href="{{pager.url(1)}}">首页</a></span>
     {% if pager.hasprev() %}
-    <span><a href="{{pager.url(pager.page-1)}}">上一页</a></span>
+        <span><a href="{{pager.url(pager.page-1)}}">上一页</a></span>
     {% endif %}
     {% if pager.begindot() %}... {% endif %}
+
     {% for idx in pager.showpages() %}
-    {% if idx == pager.page %}
-    <span>{{idx}}</span>
-    {% else %}
-    <span><a href="{{pager.url(idx)}}">{{idx}}</a></span>
-    {% endif %}
+        {% if idx == pager.page %}
+        <span class="current">{{idx}}</span>
+        {% else %}
+        <span><a href="{{pager.url(idx)}}">{{idx}}</a></span>
+        {% endif %}
     {% endfor %}
+
     {% if pager.enddot() %}...{% endif %}
     {% if pager.hasnext() %}
     <span><a href="{{pager.url(pager.page+1)}}">下一页</a></span>

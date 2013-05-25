@@ -2,18 +2,18 @@ body {
 	color: #35383D;
 	font-family: verdana, sans-serif;
 	font-size: 14px;
-	margin: 0px;
+	margin: 0;
 	background-color: #EBEBEB;
 }
 
 html {
-	margin: 0pt;
-	padding: 0pt;
+	margin: 0;
+	padding: 0;
 }
 
 form {
-	margin: 0px;
-	padding: 0px;
+	margin: 0;
+	padding: 0;
 }
 
 a {
@@ -267,15 +267,14 @@ div.page_panel {
 	margin-bottom: 8px;
 }
 
-div.page_panel span { /*margin : 0 20px 0 20px;
-	padding : 2px;*/ /*background-color:#C8DCF0;*/
+div.page_panel span {
 	border: 1px solid #999;
-	padding: 3px;
+	padding: 3px 5px;
 }
 
-div.page_panel a {
-	text-decoration: none;
-	color: #437291;
+div.page_panel span.current {
+    color:black;
+    background-color: #bbb;
 }
 
 div#sidebar {
@@ -459,15 +458,27 @@ div.errmsg {
 
 /* for tables */
 table.thin_border {
-	border-top: 1px solid #888;
-	border-left: 1px solid #888;
+	border-top: 1px solid #b6b6b6;
+	border-left: 1px solid #b6b6b6;
     border-collapse: collapse;
-    border-spacing: 0px;
+    border-spacing: 0;
 }
 
 table.thin_border td,th{
-	border-right: 1px solid #888;
-	border-bottom: 1px solid #888;
+	border-right: 1px solid #b6b6b6;
+	border-bottom: 1px solid #b6b6b6;
+    padding:6px;
+}
+
+table.thin_border tr:nth-child(even) {
+    background: #DDD;
+}
+table.thin_border tr:nth-child(odd) {
+    background: #EEE;
+}
+
+table.thin_border tr:hover {
+    background: #A2B5CD;
 }
 
 table.no_border {
