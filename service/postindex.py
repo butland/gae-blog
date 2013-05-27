@@ -4,6 +4,7 @@ __author__ = 'dongliu'
 from google.appengine.api import search
 from datetime import timedelta
 from tools.decorators import *
+import StringIO
 
 
 def addpost(post):
@@ -30,6 +31,19 @@ def _useem(content):
     return content.replace('b>', 'em>')
 
 
+_ch_set = set([',', '=', '<', '>', '&', '%', '$', '#', '@', '!', '+', '-', '*', '.', '"', "'", '/', '?'])
+def _escape(query):
+    if not query:
+        return query
+    buf = StringIO.StringIO()
+    for ch in query:
+        if ch in _ch_set:
+            buf.write(' ')
+        else:
+            buf.write(ch)
+    return buf.getvalue()
+
+
 def query(querystr, cursorstr, limit):
     expr = search.SortExpression(
         expression="_score * 1.0",
@@ -45,11 +59,10 @@ def query(querystr, cursorstr, limit):
         cursor=cursor,
         sort_options=sort,
         returned_fields=["author", "tags", "title", "published"],
-        #TODO bugs on google app engine server
         snippeted_fields=["title", "content"],
     )
 
-    query = search.Query(query_string=querystr, options=options)
+    query = search.Query(query_string=_escape(querystr), options=options)
     index = search.Index(name="article_index")
     results = index.search(query)
     searchlist = []
@@ -110,17 +123,17 @@ def getsimilars(title, tags):
         returned_fields=["author", "tags", "title", "published", "content"],
     )
 
-    query = search.Query(query_string=querystr, options=options)
+    query = search.Query(query_string=_escape(querystr), options=options)
     index = search.Index(name="article_index")
     results = index.search(query)
-    list = []
+    search_list = []
     for doc in results:
         postid = int(doc.doc_id)
         title = doc["title"][0].value
         tags = doc["tags"][0].value.split(' ')
         date = doc["published"][0].value
         author = doc["author"][0].value
-        list.append({
+        search_list.append({
             'postid': postid,
             "tags": tags,
             'title': title,
@@ -128,4 +141,4 @@ def getsimilars(title, tags):
             'date': (date + timedelta(hours=8)).strftime('%Y-%m-%d %H:%M'),
             })
 
-    return list
+    return search_list
