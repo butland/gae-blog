@@ -31,16 +31,26 @@ def _useem(content):
     return content.replace('b>', 'em>')
 
 
-_ch_set = set([',', '=', '<', '>', '&', '%', '$', '#', '@', '!', '+', '-', '*', '.', '"', "'", '/', '?'])
+_ch_set = set([u',', u'=', u'<', u'>', u'&', u'%', u'$', u'#', u'@', u'!', u'+', u'-',
+               u'*', u'.', u'"', u"'", u'/', u'?', u':', u';', u'!', u'~',
+               u'，', u'：', '；', '？', '！'])
 def _escape(query):
     if not query:
         return query
+    isunicode = False
+    if type(query) == type(u''):
+        isunicode = True
+    if not isunicode:
+        query = query.decode('utf-8')
+
     buf = StringIO.StringIO()
     for ch in query:
         if ch in _ch_set:
             buf.write(' ')
         else:
-            buf.write(ch)
+            buf.write(ch.encode('utf-8'))
+    if isunicode:
+        return buf.getvalue().decode('utf-8')
     return buf.getvalue()
 
 
