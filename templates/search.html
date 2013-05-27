@@ -37,9 +37,13 @@
                     $("#search_list").append(doTtmpl(post));
                 });
 
+                if (rlist.length > 0) {
+                    $("#container").show();
+                }
+
                 if(cursor != null && cursor != '' && rlist.length >= pagesize){
                     $("#search_more").html('加载更多');
-                }else{
+                } else {
                     $("#search_more").hide();
                 }
             },
@@ -112,7 +116,7 @@
 
 {% block main %}
 <div id='search_info'></div>
-<div class="container">
+<div class="container" id="container"  style="display:none">
     <div id='search_list'></div>
 </div>
 <div id='search_more'></div>

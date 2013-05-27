@@ -3,8 +3,7 @@ __author__ = 'dongliu'
 
 from google.appengine.api import search
 from datetime import timedelta
-import re
-from tools.webtools import subStr
+from tools.decorators import *
 
 
 def addpost(post):
@@ -13,6 +12,7 @@ def addpost(post):
         doc_id=str(post.key.id()),
         language='zh',
         fields=[search.TextField(name='title', value=post.title),
+                search.TextField(name='tags', value=' '.join(post.tags)),
                 search.HtmlField(name='content', value=content),
                 search.AtomField(name='author', value=post.author.nickname()),
                 search.DateField(name='published', value=post.date)])
@@ -24,33 +24,10 @@ def delpost(postid):
     doc_index.delete(str(postid))
 
 
-def _processkeys(content, keys):
-    for key in keys:
-        key_pattern = re.compile(re.escape(key), re.I)
-        content = key_pattern.sub(lambda x: '<em>%s</em>' % x.group(), content)
-    return content
-
-
-def _snippet(content, keys):
-    """work around for snippedted content"""
-    content_size = 100 * 2
-    start = 0
-    length = 0
-    content = content.strip()
-    pattern = re.compile(r'<[^<>]+>')
-    content = pattern.sub('', content)
-    content_up = content.upper()
-    for key in keys:
-        idx = content_up.find(key.upper())
-        if idx > 0:
-            if len(key) > length:
-                start = idx
-                length = len(key)
-    if start > 20:
-        start -= 20
-    content = content[start:]
-    content = subStr(content, content_size)
-    return _processkeys(content, keys)
+def _useem(content):
+    if not content:
+        return content
+    return content.replace('b>', 'em>')
 
 
 def query(querystr, cursorstr, limit):
@@ -67,26 +44,32 @@ def query(querystr, cursorstr, limit):
         limit=limit,  # the number of results to return
         cursor=cursor,
         sort_options=sort,
-        returned_fields=["author", "title", "published", "content"],
+        returned_fields=["author", "tags", "title", "published"],
         #TODO bugs on google app engine server
-#            snippeted_fields=["content"],
+        snippeted_fields=["title", "content"],
     )
 
     query = search.Query(query_string=querystr, options=options)
     index = search.Index(name="article_index")
     results = index.search(query)
-    list = []
-    keys = [key for key in querystr.split(' ') if len(key) > 0]
+    searchlist = []
     for doc in results:
         postid = int(doc.doc_id)
-        content = doc["content"][0].value
-        title = doc["title"][0].value
+        tags = doc["tags"][0].value.split(' ')
         date = doc["published"][0].value
         author = doc["author"][0].value
-        list.append({
+        title = ''
+        content = ''
+        for expr in doc.expressions:
+            if expr.name == "content":
+                content = expr.value
+            elif expr.name == "title":
+                title = expr.value
+        searchlist.append({
             'postid': postid,
-            'content': _snippet(content, keys),
-            'title': _processkeys(title, keys),
+            "tags": tags,
+            'content': _useem(content),
+            'title': _useem(title),
             'author': author,
             'date': (date + timedelta(hours=8)).strftime('%Y-%m-%d %H:%M'),
         })
@@ -100,9 +83,49 @@ def query(querystr, cursorstr, limit):
 
     return {
         'query': querystr,
-        'size': len(list),
+        'size': len(searchlist),
         'total': total,
         'cursor': next_cursor_urlsafe,
-        'list': list,
+        'list': searchlist,
     }
 
+
+@cache(group="post")
+def getsimilars(title, tags):
+    """
+    use title ,tags to query similar posts.
+    """
+    querystr = title + ' ' + ' '.join(tags)
+    expr = search.SortExpression(
+        expression="_score * 1.0",
+        direction=search.SortExpression.DESCENDING,
+        default_value=0.0)
+
+    # Sort up to 1000 matching results by subject in descending order
+    sort = search.SortOptions(expressions=[expr], limit=1000)
+
+    options = search.QueryOptions(
+        limit=5,  # the number of results to return
+        sort_options=sort,
+        returned_fields=["author", "tags", "title", "published", "content"],
+    )
+
+    query = search.Query(query_string=querystr, options=options)
+    index = search.Index(name="article_index")
+    results = index.search(query)
+    list = []
+    for doc in results:
+        postid = int(doc.doc_id)
+        title = doc["title"][0].value
+        tags = doc["tags"][0].value.split(' ')
+        date = doc["published"][0].value
+        author = doc["author"][0].value
+        list.append({
+            'postid': postid,
+            "tags": tags,
+            'title': title,
+            'author': author,
+            'date': (date + timedelta(hours=8)).strftime('%Y-%m-%d %H:%M'),
+            })
+
+    return list

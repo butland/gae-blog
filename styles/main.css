@@ -229,7 +229,7 @@ div.post {
 
 div.postinfo {
 	border-top: 1px solid #CCCCCC;
-	margin-bottom: 10px;
+	margin-bottom: 5px;
 	font-size: 12px;
 	color: #333333;
 }
@@ -259,6 +259,20 @@ div.post_body {
 
 .title a:HOVER {
     color: #333333;
+}
+
+div.similars {
+    margin-bottom: 10px;
+    padding: 10px;
+    background-color: white;
+    border: 1px solid #D9D9D9;
+    border-radius: 4px;
+}
+
+div.similars ul {
+    margin: 5px 20px 0;
+    padding: 0;
+    list-style-type: square;
 }
 
 div.page_panel {

@@ -230,6 +230,22 @@ $(document).ready(function(){
 
     </div>
 
+    {% if similars and similars|count > 1 %}
+    <div class="similars" id="similars">
+        相关文章: <br/>
+        <ul>
+        {% for similar in similars %}
+            {% if post.key.id() != similar.postid %}
+            <li>
+            <a href="/post/{{similar.postid}}">{{similar.title}}</a> <br/>
+            </li>
+            {% endif %}
+        {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+
+    {# 评论开始 #}
     <div id="comments">
     </div>
 

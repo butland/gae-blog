@@ -8,6 +8,7 @@ from db.commentdb import *
 from tools.pagertool import *
 from tools.webtools import *
 from tools import pinyin
+from service import postindex
 from datetime import datetime,timedelta,time
 from google.appengine.api import users
 import random
@@ -126,10 +127,13 @@ class PostDetail(webapp2.RequestHandler):
         if post.privilege <= 0 and not users.is_current_user_admin():
             self.error(404)
             return
-        seq = "%s%s" % (time(), random.randint(10000, 99999))
+
+        # get similar posts
+        similars = postindex.getsimilars(post.title, post.tags)
+
         template_values = {
             "post": post,
-            "seq": seq,
+            "similars": similars,
         }
         show_html(self.response, 'post_view.html', template_values)
 
