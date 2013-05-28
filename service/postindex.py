@@ -31,9 +31,10 @@ def _useem(content):
     return content.replace('b>', 'em>')
 
 
-_ch_set = set([u',', u'=', u'<', u'>', u'&', u'%', u'$', u'#', u'@', u'!', u'+', u'-',
-               u'*', u'.', u'"', u"'", u'/', u'?', u':', u';', u'!', u'~',
-               u'，', u'：', '；', '？', '！'])
+_ch_set = {u',', u'=', u'<', u'>', u'&', u'%', u'$', u'#', u'@', u'!', u'+', u'-', u'*', u'.', u'"', u"'", u'/', u'?',
+           u':', u';', u'!', u'~', u'(', u')', u'[', u']', u'{', u'}', u'，', u'：', '；', '？', '！', u'（', u'）'}
+
+
 def _escape(query):
     if not query:
         return query
