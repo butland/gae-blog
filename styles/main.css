@@ -199,6 +199,13 @@ ul.menuul li a {
     width: 100%;
 }
 
+span.downarrow_white_middle {
+    background: url(https://a.gfx.ms/h/c5.png) -114px -33px;
+    width:8px;height:8px;
+    display:inline-block;
+    margin-left:4px;
+}
+
 div#toolbar {
 	font-family: "Georgia", Arial, Helvetica, sans-serif;
 	font-size:12px;
