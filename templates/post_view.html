@@ -230,7 +230,7 @@ $(document).ready(function(){
 
     </div>
 
-    {% if similars and similars|count > 1 %}
+    {% if post.privilege == 1 and similars and similars|count > 1 %}
     <div class="similars" id="similars">
         相关文章: <br/>
         <ul>

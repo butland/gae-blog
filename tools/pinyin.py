@@ -3,26 +3,26 @@ __author__ = 'dongliu'
 
 # SIMPLE for chinese characters to pinyin.
 
-pinyin_dict = {}
+_pinyin_dict = {}
 
 
 def loadpinyindata(datafile="res/pinyin.data"):
-    pinyin_file = open(datafile)
-    for line in pinyin_file:
-        line = line.strip()
-        items = line.split(' ')
-        if len(items) != 2:
-            continue
-        ch = unichr(int(items[0], 16))
+    with open(datafile) as pinyin_file:
+        for line in pinyin_file:
+            line = line.strip()
+            items = line.split(' ')
+            if len(items) != 2:
+                continue
+            ch = unichr(int(items[0], 16))
 
-        pinyin = items[1]
-        idx = pinyin.find(',')
-        if idx > 0:
-            pinyin = pinyin[0:idx]
-        pinyin = pinyin[:-1]
-        if pinyin == "none":
-            continue
-        pinyin_dict[ch] = pinyin.decode('utf-8')
+            pinyin = items[1]
+            idx = pinyin.find(',')
+            if idx > 0:
+                pinyin = pinyin[0:idx]
+            pinyin = pinyin[:-1]
+            if pinyin == "none":
+                continue
+            _pinyin_dict[ch] = pinyin.decode('utf-8')
 
 loadpinyindata()
 
@@ -34,8 +34,8 @@ def getpinyin(str):
         return str
     pinyins = []
     for ch in str:
-        if ch in pinyin_dict:
-            pinyins.append(pinyin_dict[ch])
+        if ch in _pinyin_dict:
+            pinyins.append(_pinyin_dict[ch])
         else:
             pinyins.append(ch)
     return u''.join(pinyins)

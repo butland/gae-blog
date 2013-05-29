@@ -119,7 +119,9 @@ def getsimilars(title, tags):
     """
     use title ,tags to query similar posts.
     """
-    querystr = title + ' OR ' + ' OR '.join(tags)
+    queryitems = [tag for tag in tags if tag]
+    queryitems.append(title)
+    querystr = ' OR '.join(queryitems)
     expr = search.SortExpression(
         expression="_score * 1.0",
         direction=search.SortExpression.DESCENDING,
