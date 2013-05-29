@@ -113,9 +113,8 @@ def query(querystr, cursorstr, limit):
         'list': searchlist,
     }
 
-
-@cache(group="post")
-def getsimilars(title, tags):
+@cache(group="post", name="similars-${postid}")
+def getsimilars(postid, title, tags):
     """
     use title ,tags to query similar posts.
     """

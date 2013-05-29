@@ -26,7 +26,7 @@ class Post(ndb.Model):
     commentCount = ndb.IntegerProperty()
 
     @staticmethod
-    @cache(group="post")
+    @cache(group="post", name="${privilege}-${offset}-${limit}-${tag}-${archive}")
     def _get_postid_list(privilege, offset, limit, tag=None, archive=None):
         q = Post.query()
         q = q.filter(Post.privilege == privilege)
@@ -58,19 +58,19 @@ class Post(ndb.Model):
         return post_list
 
     @staticmethod
-    @cache(group="post")
+    @cache(group="post", name="count-${privilege}")
     def count(privilege):
         q = Post.query()
         q = q.filter(Post.privilege == privilege)
         return q.count(limit=99999)
 
     @staticmethod
-    @cache()
+    @cache(name="post-${postid}")
     def getpost(postid):
         return Post.get_by_id(postid)
 
     @staticmethod
     @evictgroup("post")
-    @evictid("getpost")
+    @evict(name="post-${post}")
     def savepost(post):
         return post.put()

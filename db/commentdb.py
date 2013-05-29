@@ -16,14 +16,14 @@ class Comment(ndb.Model):
     ip = ndb.StringProperty(indexed=False)
 
     @staticmethod
-    @cache(group="comment")
+    @cache(group="comment", name="${offset}-${limit}")
     def get_commentlist(offset, limit):
         q = Comment.query()
         q = q.order(-Comment.date)
         return q.fetch(offset=offset, limit=limit)
 
     @staticmethod
-    @cache(group="comment")
+    @cache(group="comment", name="${postid}-${offset}-${limit}")
     def get_commentlist_bypost(postid, offset, limit):
         q = Comment.query()
         q = q.filter(Comment.postId == postid)

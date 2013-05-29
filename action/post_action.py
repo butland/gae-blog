@@ -129,7 +129,7 @@ class PostDetail(webapp2.RequestHandler):
             return
 
         # get similar posts
-        similars = postindex.getsimilars(post.title, post.tags)
+        similars = postindex.getsimilars(postid, post.title, post.tags)
 
         template_values = {
             "post": post,

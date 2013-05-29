@@ -23,18 +23,18 @@ class File(ndb.Model):
         return q.count(limit=1000)
 
     @staticmethod
-    @cache()
+    @cache(name="file-${fileid}")
     def getfile(fileid):
         return File.get_by_id(fileid)
 
     @staticmethod
     @evictgroup("file")
-    @evictid("getfile")
-    def delfile(file):
-        file.key.delete()
+    @evict(name="file-${f}")
+    def delfile(f):
+        f.key.delete()
 
     @staticmethod
     @evictgroup("file")
-    @evictid("getfile")
-    def savefile(file):
-        return file.put()
+    @evict(name="file-${f}")
+    def savefile(f):
+        return f.put()

@@ -20,7 +20,7 @@ class Tag(ndb.Model):
     count = ndb.IntegerProperty(indexed=False)
 
     @staticmethod
-    @cache(group="tag")
+    @cache(group="tag", name="${cid}-${name}")
     def get_tag(cid, name):
         q = Tag.query()
         q = q.filter(Tag.cid == cid)
@@ -28,7 +28,7 @@ class Tag(ndb.Model):
         return q.get()
 
     @staticmethod
-    @cache(group="tag")
+    @cache(group="tag", name="${cid}")
     def get_taglist(cid):
         q = Tag.query()
         q = q.filter(Tag.cid == cid)

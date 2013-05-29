@@ -1,6 +1,9 @@
 __author__ = 'dongliu'
 from google.appengine.api import memcache
 from db.groupdb import *
+import inspect
+import itertools
+from string import Template
 
 
 def tostr(arg):
@@ -10,23 +13,52 @@ def tostr(arg):
         return str(arg)
 
 
-def _get_key(group, name, args, kwargs):
-    # for get by id cache
-    if group == '':
-        key = name + '#' + str(args[0])
-        return key
-    key = name + str(Group.get_group_count(group))
-    key += '#' + '-'.join([tostr(arg) for arg in args])
-    dkeys = kwargs.keys()
-    dkeys.sort()
-    key += '#' + '-'.join([dkey + '_' + str(kwargs[dkey]) for dkey in dkeys])
+def _getkey(group, name, functionname, argsdict):
+    if name:
+        t = Template(name)
+        key = t.substitute(argsdict)
+    else:
+        # this is evil, and not well controled, so always give a name.
+        key = functionname
+        if argsdict:
+            argslist = sorted(argsdict.items(), key=lambda t: t[0])
+            key = key + '-' + '-'.join([t[1] for t in argslist])
+
+    if group:
+        key = '%s-%d#%s' % (group, Group.get_group_count(group), key)
     return key
 
 
-def cache(group=""):
+def _parsefunction(function, args, kwargs):
+    argsdict = {}
+    if args:
+        args_name = inspect.getargspec(function)[0]
+        argsdict.update(dict(itertools.izip(args_name, args)))
+    if kwargs:
+        argsdict.update(kwargs)
+    for key in argsdict.viewkeys():
+        value = argsdict[key]
+        if value is None:
+            argsdict[key] = ''
+        elif isinstance(value, type('')):
+            pass
+        elif isinstance(value, type(u'')):
+            argsdict[key] = value.encode('utf-8')
+        elif isinstance(value, ndb.Model):
+            if value.key is not None:
+                argsdict[key] = str(value.key.id())
+            else:
+                argsdict[key] = ''
+        else:
+            argsdict[key] = str(argsdict[key])
+    return argsdict
+
+
+def cache(name=None, group=None):
     def _cache(function):
         def wrapper(*args, **kwargs):
-            key = _get_key(group, function.__name__, args, kwargs)
+            argsdict = _parsefunction(function, args, kwargs)
+            key = _getkey(group, name, function.__name__, argsdict)
             value = memcache.get(key)
             if value is not None:
                 return value
@@ -34,52 +66,47 @@ def cache(group=""):
                 value = function(*args, **kwargs)
                 memcache.set(key, value=value, time=3600 * 24 * 5)
                 return value
+
         return wrapper
+
     return _cache
 
 
 def evictgroup(group):
     """evict all group's cache"""
+
     def _evictgroup(function):
         def wrapper(*args, **kwargs):
             value = function(*args, **kwargs)
             Group.increase(group)
             return value
+
         return wrapper
+
     return _evictgroup
 
 
-def evict(name):
-    """evict specify cache, identyfy by args[0], that means id is the first arg"""
+def evict(name, group=""):
+    """evict specify cache"""
     def _evict(function):
         def wrapper(*args, **kwargs):
-            key = _get_key("", name, args, kwargs)
+            argsdict = _parsefunction(function, args, kwargs)
+            key = _getkey(group, name, function.__name__, argsdict)
             value = function(*args, **kwargs)
             memcache.delete(key)
             return value
-        return wrapper
-    return _evict
 
-
-def evictid(name):
-    """evict specify cache, identyfy by first arg's id property"""
-    def _evict(function):
-        def wrapper(*args, **kwargs):
-            if args[0].key is not None:
-                key = _get_key("", name, (args[0].key.id(), ), kwargs)
-                value = function(*args, **kwargs)
-                memcache.delete(key)
-            else:
-                value = function(*args, **kwargs)
-            return value
         return wrapper
+
     return _evict
 
 
 def singleton(cls, *args, **kw):
     instances = {}
+
     def wrapper():
         if cls not in instances:
             instances[cls] = cls(*args, **kw)
         return instances[cls]
+
     return wrapper
