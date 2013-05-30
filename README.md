@@ -15,3 +15,5 @@
 * 基于GAE search api的站内搜索
 * 评论邮件通知
 * 匿名评论时使用验证码
+
+了解如何使用:https://github.com/xiaxiaocao/gae-blog/wiki
