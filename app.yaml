@@ -7,19 +7,19 @@ threadsafe: true
 handlers:
 
 - url: /images
-  static_dir: images
+  static_dir: web/static/images
 - url: /scripts
-  static_dir: scripts
+  static_dir: web/static/scripts
 - url: /styles
-  static_dir: styles
+  static_dir: web/static/styles
 - url: /html
-  static_dir: html
+  static_dir: web/static/html
 
 - url: /favicon.ico
-  static_files: favicon.ico
+  static_files: web/static/favicon.ico
   upload: favicon.ico
 - url: /robots.txt
-  static_files: robots.txt
+  static_files: web/static/robots.txt
   upload: robots.txt
 
 - url: /worker/.*
