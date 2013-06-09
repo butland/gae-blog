@@ -1,0 +1,8 @@
+User-agent: *
+Disallow: /album/
+Disallow: /showimage/
+Disallow: /showfile/
+Disallow: /admin/
+Disallow: /webbug
+Disallow: /captcha
+Disallow: /tools/
