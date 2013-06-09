@@ -69,6 +69,32 @@
 {% endraw %}
 
 <script type="text/javascript">
+
+    var entityMap = {
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': '&quot;',
+        "'": '&#39;',
+        "/": '&#x2F;'
+    };
+
+    function escapeHtml(content) {
+        content = String(content).replace(/[&<>"'\/]/g, function (s) {
+            return entityMap[s];
+        });
+        return content;
+    }
+
+    function escapeCommentFields(comment) {
+        comment.content = escapeHtml(comment.content);
+        comment.username = escapeHtml(comment.username);
+        if (typeof(comment.parentContent) != 'undefined' && comment.parentContent) {
+            comment.parentContent.content = escapeHtml(comment.parentContent.content);
+            comment.parentContent.username = escapeHtml(comment.parentContent.username);
+        }
+    }
+
     function load_comment(page){
         var url = "/comment/{{ post.key.id() }}/" + page;
         $.ajax({
@@ -83,6 +109,7 @@
                 var ctmpl = document.getElementById('comment_template').innerHTML;
                 var cdoTtmpl = doT.template(ctmpl);
                 $(data.clist).each(function(i, comment){
+                    escapeCommentFields(comment)
                     var chtml = cdoTtmpl(comment);
                     $("#comments").append(chtml);
                 });
@@ -204,7 +231,7 @@ $(document).ready(function(){
     {# 文章区域 #}
     <div class="post" id="post_{{ post.key.id() }}">
         {% if post.privilege != 2 %}
-            <h1 class=title><a href="/post/{{ post.key.id() }}">{{ post.title }}</a></h1>
+            <h1 class=title>{{ post.title }}</h1>
             <div class="postinfo">
                     {{ post.date|datetime }} | {{ post.author.nickname() }}
                     {% if post.tags %}
@@ -271,11 +298,11 @@ $(document).ready(function(){
             <div style="line-height: 200%;">
                 {% if getuser() %}
                 <input type=text name="username" id="username" readonly="readonly" value="{{ getuser().nickname() }}" size=30 /><label for="username">昵称(必填)</label><br />
-                <input type="text" name="email" id="email" readonly="readonly" value="{{ getuser().email() }}" size=30 /><label for="email">电子邮箱(必填,邮箱地址将不会公开)</label><br />
+                <input type="text" name="email" id="email" readonly="readonly" value="{{ getuser().email() }}" size=30 /><label for="email"> 电子邮箱(邮箱地址不会公开, 当您的评论有回复会收到邮件通知)</label><br />
                 {% else %}
                 你现在以游客身份发表评论：<br />
                 <input type=text name="username" id="username" maxlength=30 size=30 /><label for="username"> 昵称(必填)</label><br />
-                <input type="text" name="email" id="email" size=30 /><label for="email"> 电子邮箱(邮箱地址将不会公开)</label><br />
+                <input type="text" name="email" id="email" size=30 /><label for="email"> 电子邮箱(邮箱地址不会公开, 当您的评论有回复会收到邮件通知)</label><br />
                 {% endif %}
 
                 <input type="text" name="homepage" id="homepage" size=30 value="" /><label for="homepage"> 个人主页</label><br />

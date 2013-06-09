@@ -53,6 +53,9 @@ class Comment(ndb.Model):
         return Comment.get_by_id(commentid)
 
     def to_dict(self, isadmin):
+        """
+        convert to dict so we can ser comment to json, used for display.
+        """
         from datetime import datetime, timedelta
         import hashlib
         import json
@@ -87,6 +90,9 @@ class Comment(ndb.Model):
         return output
 
     def to_pdict(self):
+        """
+        use to generat parent json str, to store in datastore.
+        """
         from datetime import datetime, timedelta
         output = {
             "id": self.key.id(),

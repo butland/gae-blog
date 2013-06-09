@@ -1,5 +1,7 @@
 #encoding=utf-8
 
+import StringIO
+import cgi
 import webapp2
 from db.postdb import *
 from db.commentdb import *
@@ -12,7 +14,7 @@ import json
 
 
 class CommentList(webapp2.RequestHandler):
-    def get(self, postid, pagenum = '1'):
+    def get(self, postid, pagenum='1'):
         postid = int(postid)
         try:
             page = int(pagenum)
@@ -24,15 +26,25 @@ class CommentList(webapp2.RequestHandler):
         if count is None:
             count = 0
         cpagesize = Config()["commentnumperpage"]
-        commentlist = Comment.get_commentlist_bypost(postid, (page-1)*cpagesize, cpagesize)
+        commentlist = Comment.get_commentlist_bypost(postid, (page - 1) * cpagesize, cpagesize)
 
         isadmin = users.is_current_user_admin()
-        result = {"count":count,
-                  "page":page,
-                  "pagecount":(count-1)/cpagesize + 1,
-                  "clist":[comment.to_dict(isadmin) for comment in commentlist]
+        result = {"count": count,
+                  "page": page,
+                  "pagecount": (count - 1) / cpagesize + 1,
+                  "clist": [comment.to_dict(isadmin) for comment in commentlist]
         }
         show_json(self.response, result)
+
+
+def _escapehtml(string):
+    if not string:
+        return string
+    buf = StringIO.StringIO()
+    for ch in string:
+        if ch != '<' and ch != '>' and ch != '&' and ch != '"' and ch != "'":
+            buf.write(ch)
+    return buf.getvalue()
 
 
 class CommentInsert(webapp2.RequestHandler):
@@ -42,8 +54,8 @@ class CommentInsert(webapp2.RequestHandler):
         if not user:
             captcha = self.request.get('code')
             seq = self.request.get('seq')
-            code = memcache.get("captcha#"+seq)
-            memcache.delete("captcha#"+seq)
+            code = memcache.get("captcha#" + seq)
+            memcache.delete("captcha#" + seq)
             if captcha is None or captcha.strip().upper() != code:
                 # 验证码错误
                 show_json(self.response, {'state':1, 'msg':'验证码错误'})
@@ -55,12 +67,11 @@ class CommentInsert(webapp2.RequestHandler):
             show_json(self.response, {'state':-1, 'msg':'不存在的文章'})
             return
 
-        # TODO: escape html
         comment.postId = postid
         comment.content = self.request.get('content')
         comment.username = self.request.get('username')
-        comment.email = self.request.get('email')
-        comment.homepage = self.request.get('homepage')
+        comment.email = _escapehtml(self.request.get('email'))
+        comment.homepage = _escapehtml(self.request.get('homepage'))
         comment.ip = self.request.remote_addr
         comment.date = datetime.today()
 
@@ -82,8 +93,9 @@ class CommentInsert(webapp2.RequestHandler):
         post.commentCount += 1
         Post.savepost(post)
 
-        taskqueue.add(url='/worker/comment', params={'postid': str(postid),
-                                                     "commentid": str(commentid.id())})
+        taskqueue.add(
+            url='/worker/comment',
+            params={'postid': str(postid), 'replyto': replyto, 'commentid': str(commentid.id())})
 
         show_json(self.response, {'state': 0, 'msg': ''})
 
@@ -103,4 +115,4 @@ class CommentDelete(webapp2.RequestHandler):
         if post.commentCount < 0:
             post.commentCount = 0
         Post.savepost(post)
-        show_json(self.response, {'state':0})
+        show_json(self.response, {'state': 0})
