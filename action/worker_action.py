@@ -10,7 +10,7 @@ from google.appengine.api import users
 from service import postindex
 from db.postdb import PRIVILEGE_SHOW
 
-#TODO:  we need auth, something as handlers's login: admin setting
+
 class CommentWorker(webapp2.RequestHandler):
     # when adding a new comment ,send mail notify to post's author.
     def get(self):

@@ -1,5 +1,7 @@
 #coding=utf-8
 __author__ = 'dongliu'
+# when google app engine search api come to release, it will charge.
+# if you don't pay for your app, the search api will not work.
 
 from google.appengine.api import search
 from datetime import timedelta

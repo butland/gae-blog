@@ -129,7 +129,11 @@ class PostDetail(webapp2.RequestHandler):
             return
 
         # get similar posts
-        similars = postindex.getsimilars(postid, post.title, post.tags)
+        try:
+            similars = postindex.getsimilars(postid, post.title, post.tags)
+        except Exception as e:
+            # search api may not be enabled, or have bugs.
+            similars = []
 
         template_values = {
             "post": post,
