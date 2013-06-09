@@ -1,6 +1,7 @@
 __author__ = 'dongliu'
 from flask import Flask
 app = Flask(__name__)
+app.debug = False
 
 import web.webtools
 import web.tools_view

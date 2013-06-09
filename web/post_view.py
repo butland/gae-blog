@@ -222,7 +222,7 @@ def feed(tag):
         archive=None)
     title = config["heading"]
     if tag:
-        title += " - " + tag.decode('utf-8')
+        title += u" - " + tag
     link = "http://" + config["host"]
     description = config["subheading"]
     items = []

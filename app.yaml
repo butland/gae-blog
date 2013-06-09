@@ -17,10 +17,10 @@ handlers:
 
 - url: /favicon.ico
   static_files: web/static/favicon.ico
-  upload: favicon.ico
+  upload: web/static/favicon.ico
 - url: /robots.txt
   static_files: web/static/robots.txt
-  upload: robots.txt
+  upload: web/static/robots.txt
 
 - url: /worker/.*
   script: main.app
