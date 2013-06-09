@@ -97,7 +97,7 @@ def post_list(pagenum, tag, archive):
     pager = Pager(total, page, config["postnumperpage"])
 
     if tag:
-        base = '/post/list/' + webtools.encodetag(tag.decode('utf-8')) + '/'
+        base = '/post/list/' + webtools.encodetag(tag) + '/'
     elif archive:
         base = '/post/archive/' + archive + '/'
     else:
@@ -110,8 +110,6 @@ def post_list(pagenum, tag, archive):
         limit=pager.pagesize,
         tag=tag,
         archive=archive)
-    if tag:
-        tag = tag.decode('utf-8')
 
     return render_template('post_list.html', postlist=postlist, pager=pager, tag=tag, archive=archive, config=Config())
 
