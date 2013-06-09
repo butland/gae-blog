@@ -1,0 +1,85 @@
+{% extends "base_1col.html" %}
+
+{% block title %} - 修改文章 {% endblock %}
+{% block script %}
+    <script type="text/javascript" src="/scripts/redactor/redactor.min.js"></script>
+    <script type="text/javascript" src="/scripts/redactor/highlight-plugin.js"></script>
+    <script type="text/javascript" src="/scripts/jquery.ui.autobox/jquery.templating.js"></script>
+    <script type="text/javascript" src="/scripts/jquery.ui.autobox/jquery.ui.autobox.ext.js"></script>
+    <script type="text/javascript" src="/scripts/jquery.ui.autobox/jquery.ui.autobox.js"></script>
+    <link rel="stylesheet" href="/scripts/jquery.ui.autobox/jquery.ui.autobox.css" type="text/css" media="screen" />
+    <link rel="stylesheet" href="/styles/redactor.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="/styles/highlight.css" />
+    {# init editor #}
+    <script type="text/javascript">
+        $(function () {
+            $('#content').redactor({
+                imageUpload: '/file/upload?type=redactor_img',
+                fileUpload: '/file/upload?type=redactor_file',
+                plugins: ['highlight'],
+                convertDivs: false,
+                minHeight: 450
+            });
+        });
+    </script>
+
+    {# tag input #}
+    <script type="text/javascript">
+        $(function() {
+            var list = [
+                {% for tag in taglist %}
+                {text: '{{ tag.name }}', spell: '{{ tag.spell }}'},
+                {% endfor %}
+            ];
+            var box =
+                    $("input.autobox.1").autobox({
+                        list: list,
+                        match: function(typed) {
+                            this.typed = typed;
+                            this.pre_match = this.text;
+                            this.match = this.post_match = '';
+                            if (!this.ajax && !typed || typed.length == 0) { return true; }
+                            var match_at = this.spell.search(new RegExp(typed, "i"));
+                            if (match_at != -1) {
+                                this.pre_match = this.text.slice(0,match_at);
+                                this.match = this.text.slice(match_at,match_at + typed.length);
+                                this.post_match = this.text.slice(match_at + typed.length);
+                                return true;
+                            }
+                            return false;
+                        },
+                        insertText: function(obj) { return obj.text },
+                        templateText: "<li><%= pre_match %><span class='matching' ><%= match %></span><%= post_match %></li>",
+                        prevals : [
+            {% if post.tags %}
+            {% for tag in post.tags %}'{{ tag }}',{% endfor %}
+            {% endif %}
+            ],
+        });
+        $("input.autobox")
+                .bind("activate.autobox", function(e, d) {  })
+                .bind("cancel.autobox", function(e) {  });
+        });
+    </script>
+{% endblock %}
+
+{% block main %}
+    <form action="/post/update" id="editpost" method="post">
+    <input type=hidden name=postid id=postid value="{% if post.key %}{{ post.key.id() }}{% endif %}" />
+    <div style="font-size:16px;margin-bottom:5px;padding-top:5px;">
+        标题：<input name="title" id="title" maxlength="100" style="width:80%;" value="{{ post.title }}"/></div>
+    <div style="font-size:16px;margin-bottom:5px;"> <span style="float:left;">标签：</span>
+        <input type="text" class="autobox 1" name="tags" />
+    </div>
+    <textarea name="content" id="content" style="height: 580px;" >{{ post.content }}</textarea>
+    <br />
+    <div style="" id="option">
+        {# remove datepicker, use html datetime, wait chrome, firefox, ie, safari to implement it.. #}
+        日期：<input name="pubdate" id="pubdate" type=datetime-local size=20 value="{{ post.date|datetimelocal }}" />
+        权限：<input type=radio name=privilege value=1 {% if post.privilege == 1 %}checked{% endif %} />公开
+        <input type=radio name=privilege value=0 {% if post.privilege == 0 %}checked{% endif %} />隐藏
+        <input type=radio name=privilege value=2 {% if post.privilege == 2 %}checked{% endif %} />置顶
+    </div>
+    <input type="submit" class="button" value="提交" />
+    </form>
+{% endblock %}

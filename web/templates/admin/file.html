@@ -1,0 +1,27 @@
+{% extends "/base_1col.html" %}
+
+{% block main %}
+<script>
+    function deleteFile(id) {
+        if (confirm("确定要删除文件?")) {
+            $.post("/file/delete", {fileid: id}, function (data) {
+                location.reload();
+            });
+        }
+    }
+</script>
+<div style="margin:20px 0 10px 0;">
+<table class="thin_border" style="width:80%">
+    <tr><th>文件名</th><th>mime-type</th><th>上传时间</th><th>操作</th></tr>
+    {% for file in filelist %}
+    <tr>
+        <td><a href="/showfile/{{file.key.id()}}" target="_blank">{{file.fileName}}</a></td>
+        <td>{{file.mimeType}}</td>
+        <td style="text-align: center;">{{file.date|datetime}}</td>
+        <td style="text-align: center;"><a href="javascript:void(0)" onclick="deleteFile('{{file.key.id()}}')">删除</a></td>
+    </tr>
+    {% endfor %}
+</table>
+</div>
+{% include '/inc/pager.html' %}
+{% endblock %}

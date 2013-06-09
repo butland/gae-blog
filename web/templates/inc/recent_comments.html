@@ -1,0 +1,13 @@
+<div class="block">
+    <div class="header" id="commenthead">最近评论</div>
+    <div class="content" id="commentcontent">
+        <ul class="block_ul">
+            {% for comment in get_recent_comments() %}
+            <li>
+                <a href="/post/{{comment.postId}}#c{{comment.key.id()}}">{{comment.username}} on {{get_post_title(comment.postId)}}</a> <br/>
+                {{ comment.content }}
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>

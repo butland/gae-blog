@@ -1,0 +1,56 @@
+{% extends "base_2col.html" %}
+{% set side_long = 1 %}
+{% set tab_article = 1 %}
+
+{% block title %} - 文章列表 {% if tag %} - {{ tag }} {% endif %} {% if archive %} - {{ archive }} {% endif %} {% endblock %}
+
+{% block feed %}
+    <meta name="robots" content="noindex,follow">
+    <link rel="alternate" type="application/rss+xml" title="{{ config.heading }}" href="/feed/{{ tag|tag }}" />
+{% endblock %}
+
+{% block script %}
+<link rel="stylesheet" type="text/css" href="/styles/highlight.css" />
+{% endblock %}
+
+{% block main %}
+    <script type="text/javascript">
+        function deleteBlogPost(id){
+            if(confirm("确定要删除吗?")){
+                $.post("/post/delete", {postid:id}, function(data){
+                    location.reload();
+                });
+            }
+        }
+    </script>
+
+    {# Post list #}
+    {% for post in postlist %}
+    <div class="post" id="post_{{ post.key.id() }}">
+        <div class=title><a href="/post/{{ post.key.id() }}">{{ post.title }}</a></div>
+        <div class="postinfo">
+            {{ post.date|datetime }} | {{ post.author.nickname() }}
+            {% if post.tags %}
+            | 标签:
+            {% for tag in post.tags %}
+                <a href='/post/list/{{ tag | tag }}/'>{{ tag }}</a>{% if not loop.last %}, {% endif %}
+            {% endfor %}
+            {% endif %}
+            | <a href="/post/{{ post.key.id() }}#comments">评论({{ post.commentCount or 0 }})</a>
+            {% if isadmin() %}
+            | <a href="javascript:void(0);" onclick="deleteBlogPost('{{ post.key.id() }}');">删除</a>
+            | <a href="/post/edit?postid={{ post.key.id() }}">编辑</a>
+            {% endif %}
+        </div>
+        <div class="post_body">
+            {% if config.abstract %}
+                {{ post.summary()|safe }}
+            {% else %}
+                {{ post.content|safe }}
+            {% endif %}
+        </div>
+    </div>
+    {% endfor %}
+    {# 分页 #}
+    {% include '/inc/pager.html' %}
+{% endblock %}
