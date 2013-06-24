@@ -242,7 +242,7 @@ div.postinfo {
 	color: #333333;
 }
 
-div.postinfo a{
+div.postinfo a {
 	color: #333333;
 }
 
@@ -252,6 +252,9 @@ div.post_body {
 	overflow: hidden;
 }
 
+div.post_body a {
+    text-decoration: underline;
+}
 
 .title {
 	font-family: Georgia, Times, serif;
@@ -377,6 +380,9 @@ div.footer {
 	border-top: 1px solid #CCCCCC;
 }
 
+div.footer a {
+    text-decoration: underline;
+}
 
 div.box {
 	float: left;
@@ -479,32 +485,34 @@ div.errmsg {
 }
 
 /* for tables */
-table.thin_border {
+table {
 	border-top: 1px solid #b6b6b6;
 	border-left: 1px solid #b6b6b6;
     border-collapse: collapse;
     border-spacing: 0;
 }
 
-table.thin_border td,th{
+table td,th{
 	border-right: 1px solid #b6b6b6;
 	border-bottom: 1px solid #b6b6b6;
     padding:6px;
 }
 
-table.thin_border tr:nth-child(even) {
+table tr:nth-child(even) {
     background: #DDD;
 }
-table.thin_border tr:nth-child(odd) {
+table tr:nth-child(odd) {
     background: #EEE;
 }
 
-table.thin_border tr:hover {
-    background: #A2B5CD;
+table tr:hover {
+    background: #b1c5e0;
 }
 
 table.no_border {
 	border-collapse: collapse;
 	border-spacing:1px;
 	padding:0;
+    border:none;
+    background:white;
 }
