@@ -123,13 +123,13 @@ def view_post(postid):
         return abort(404)
 
     # get similar posts
-    try:
-        similars = postindex.getsimilars(postid, post.title, post.tags)
-    except Exception as e:
-        # search api may not be enabled, or have bugs.
-        similars = []
+    # try:
+    #     similars = postindex.getsimilars(postid, post.title, post.tags)
+    # except Exception as e:
+    #     # search api may not be enabled, or have bugs.
+    #     similars = []
 
-    return render_template('post_view.html', post=post, similars=similars, config=Config())
+    return render_template('post_view.html', post=post, similars=[], config=Config())
 
 
 @app.route('/post/edit', methods=['GET'])
