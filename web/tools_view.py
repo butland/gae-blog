@@ -1,6 +1,7 @@
 #encoding=utf-8
 
 from google.appengine.api import users
+from pygments.lexers.agile import PythonLexer
 from service.fortune import *
 from flask import (Response, request, abort)
 from web import app
@@ -21,4 +22,4 @@ def highlight_code():
     if not language or not code:
         abort(400)
     lexer = get_lexer_by_name(language, stripall=True)
-    return Response(rss.to_xml(), mimetype='text/html')
+    return Response(highlight(code, lexer, HtmlFormatter()), mimetype='text/html')
