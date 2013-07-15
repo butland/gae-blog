@@ -164,15 +164,10 @@
         $("#replytext").hide();
     }
 
-$(document).ready(function(){
-    load_comment(1);
-
-    // comment for submit
-    $("#comment_form").submit(function (e){
-        e.preventDefault();
-        $('#comment_submit').attr('disabled','disabled');
+    function submitComment(){
+        $("#comment_submit").attr('disabled','disabled');
         var cform = $("#comment_form");
-        var form = cform[0]
+        var form = cform[0];
         if(form.username.value == ""){
             alert("用户名 不能为空.");
             $('#comment_submit').removeAttr('disabled');
@@ -220,6 +215,15 @@ $(document).ready(function(){
             }
         }, "json");
         $('#comment_submit').removeAttr('disabled');
+        return false;
+    }
+$(document).ready(function(){
+    load_comment(1);
+
+    // comment for submit
+    $("#comment_form").submit(function (e){
+        e.preventDefault();
+        submitComment(e);
         return false;
     });
 });
@@ -296,32 +300,30 @@ $(document).ready(function(){
             </script>
             {% endif %}
             <div style="line-height: 200%;">
-                {% if getuser() %}
-                <input type=text name="username" id="username" readonly="readonly" value="{{ getuser().nickname() }}" size=30 /><label for="username">昵称(必填)</label><br />
-                <input type="text" name="email" id="email" readonly="readonly" value="{{ getuser().email() }}" size=30 /><label for="email"> 电子邮箱(邮箱地址不会公开, 当您的评论有回复会收到邮件通知)</label><br />
-                {% else %}
-                你现在以游客身份发表评论：<br />
-                <input type=text name="username" id="username" maxlength=30 size=30 /><label for="username"> 昵称(必填)</label><br />
-                <input type="text" name="email" id="email" size=30 /><label for="email"> 电子邮箱(邮箱地址不会公开, 当您的评论有回复会收到邮件通知)</label><br />
-                {% endif %}
-
-                <input type="text" name="homepage" id="homepage" size=30 value="" /><label for="homepage"> 个人主页</label><br />
+                <style>
+                    label.des {
+                        width:100px;
+                        display:inline-block;
+                    }
+                </style>
+                <label for="username" class="des">昵称</label><input type=text name="username" id="username" {%if getuser()%}readonly="readonly" value="{{ getuser().nickname() }}"{%endif%} size=30 />*<br />
+                <label for="email" class="des">电子邮箱</label><input type="email" name="email" id="email" {%if getuser()%}readonly="readonly" value="{{ getuser().email() }}"{%endif%} size=30 />(不公开, 当您的评论有回复会收到邮件通知)<br />
+                <label for="homepage" class="des">个人主页</label><input type="url" name="homepage" id="homepage" size=50 value="" /><br />
 
                 <span id="replytext" style="display:none;border:1px solid #CCCCCC;padding:1px;" >
                     你正在回复<span id="replyname"></span>的评论.
                     <a href='javascript:void(0)' onclick="removeReply()" title="取消恢复指定评论">X</a>
                 </span>
-                <div></div>
-                <textarea name="content" id="content" style="width:80%;height:100px;font-size:12px;"></textarea>(必填)
-                <input type="hidden" name="postid" id="postid" value="{{ post.key.id() }}" />
-                <br />
+                <textarea name="content" id="content" style="width:80%;height:100px;font-size:12px;"></textarea>
+                <input type="hidden" name="postid" id="postid" value="{{ post.key.id() }}" /> <br />
 
                 {% if not getuser() %}
-                    <input type=text name="code" id="code" size=5 autocomplete="off" />
+                    <label for="code" class="des"> 验证码</label>
+                    <input type=text name="code" id="code" size=6 autocomplete="off" />*
                     <a href="javascript:void(0);"  onclick="refreshcaptcha();" style="border:none;" ><script>
                         document.write('<img id="captcha_img" src="/captcha?seq=' + seq + '" style="display:inline;vertical-align:middle;border:none;" />');
                     </script></a>
-                    <label> 点击图片刷新验证码</label>   <br />
+                    <br />
                 {% endif %}
                 <input class="button" type="submit" id="comment_submit" value="提交" />
             </div>

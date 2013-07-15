@@ -20,6 +20,7 @@ def setdict(pdict, name, value):
     elif type(ovalue) == type(False):
         pdict[name] = value.lower() == "true" or value.lower() == "on"
 
+
 @singleton
 class Config(object):
     def __init__(self):
@@ -37,7 +38,8 @@ class Config(object):
 
             "picasaalbumname": "",
             "gauid": "",
-            }
+            "baidusiteid": "",
+        }
         for key in self._configs:
             configure = Configure.get_by_id(key)
             if configure:
