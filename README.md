@@ -2,7 +2,7 @@
 
 ### 说明
 > Host在Google App Engine上的个人blog程序.
-> 最初是使用GAE for Java编写的，鉴于GAE python runtime开始支持PIL，python优秀的语言特性，以及jinja2等出色的工具，而改用python重写
+> 前身是使用GAE for Java编写的(https://code.google.com/p/jalus/ )，现改用python重写
 
 ### 这里可以看到示例
 > http://www.dongliu.net
