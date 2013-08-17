@@ -123,6 +123,7 @@ div#header {
 	background-color : #444;
 	height: 30px;
 	margin: 0;
+    padding-top: 5px;
 	width: 100%;
 }
 
@@ -231,12 +232,12 @@ div.post {
 	padding: 10px;
 	background-color: white;
 	border: 1px solid #D9D9D9;
-    border-radius: 4px;
 }
 
 
 div.postinfo {
 	border-top: 1px solid #CCCCCC;
+    padding-top: 3px;
 	margin-bottom: 5px;
 	font-size: 12px;
 	color: #333333;
@@ -253,7 +254,7 @@ div.post_body {
 }
 
 div.post_body a {
-    text-decoration: underline;
+    color: #049;
 }
 
 .title {
@@ -277,7 +278,6 @@ div.similars {
     padding: 10px;
     background-color: white;
     border: 1px solid #D9D9D9;
-    border-radius: 4px;
 }
 
 div.similars ul {
@@ -294,17 +294,28 @@ div.page_panel {
 
 div.page_panel span {
 	border: 1px solid #999;
-	padding: 3px 5px;
+	padding: 5px 8px;
 }
 
-div.page_panel span.current {
-    color:black;
-    background-color: #bbb;
+div.page_panel a {
+    border: 1px solid #999;
+	padding: 5px 8px;
+    background-color: #ededed;
+}
+
+div.page_panel a.current {
+    background-color: #888;
+}
+
+div.page_panel a:hover {
+    text-decoration: none;
+    background-color: #888;
 }
 
 div#sidebar {
 	display:table-cell;
-	width : 240px;
+	width : 240px !important;
+    max-width : 240px !important;
 	padding-top: 10px;
 }
 
@@ -360,7 +371,7 @@ div.block .item {
 }
 
 a.cloud_tag {
-    margin: 2px 0px 0 5px;
+    margin: 2px 0 0 5px;
     white-space: nowrap;
     height: 16px;
     line-height: 16px;
@@ -427,7 +438,6 @@ div.box .des a:hover {
 div.comment {
 	border-collapse : separate;
     border: 1px solid #D9D9D9;
-    border-radius: 4px;
     font-size : 12px;
 	padding: 8px 0;
 	margin-top:8px;
@@ -472,7 +482,6 @@ div.commenbody {
 }
 div.newcomment {
     border: 1px solid #D9D9D9;
-    border-radius: 4px;
     margin-top: 10px;
 	padding: 10px 0 0 10px;
 	background-color: white;
