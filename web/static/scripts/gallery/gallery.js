@@ -35,183 +35,183 @@ $(function () {
     };
 
     // gallery container
-    var $rgGallery = $('#rg-gallery'),
+    var $rgGallery = $('#rg-gallery');
     // carousel container
-        $esCarousel = $rgGallery.find('div.es-carousel-wrapper'),
+    var $esCarousel = $rgGallery.find('div.es-carousel-wrapper');
     // the carousel items
-        $items = $esCarousel.find('ul > li'),
+    var $items = $esCarousel.find('ul > li');
     // total number of items
-        itemsCount = $items.length;
+    var itemsCount = $items.length;
 
-    Gallery = (function () {
+    var Gallery = (function () {
         // index of the current item
-        var current = 0,
+        var current = 0;
         // mode : carousel || fullview
-            mode = 'carousel',
+        var mode = 'carousel';
         // control if one image is being loaded
-            anim = false,
-            init = function () {
-
-                // (not necessary) preloading the images here...
-                $items.add('<img src="/images/ajax-loader.gif"/>').imagesLoaded(function () {
-                    // add options
-                    _addViewModes();
-                    // add large image wrapper
-                    _addImageWrapper();
-                    // show first image
-                    _showImage($items.eq(current));
-                });
-
-                // initialize the carousel
-                if (mode === 'carousel')
-                    _initCarousel();
-            },
-            _initCarousel = function () {
-
-                // we are using the elastislide plugin:
-                // http://tympanus.net/codrops/2011/09/12/elastislide-responsive-carousel/
-                $esCarousel.show().elastislide({
-                    imageW: 72,
-                    border: 0,
-                    onClick: function ($item) {
-                        if (anim) return false;
-                        anim = true;
-                        // on click show image
-                        _showImage($item);
-                        // change current
-                        current = $item.index();
-                    }
-                });
-
-                // set elastislide's current to current
-                $esCarousel.elastislide('setCurrent', current);
-
-            },
-            _addViewModes = function () {
-                var $viewfull = $('#rg-view-full');
-                var $viewthumbs = $('#rg-view-thumbs');
-
-                $viewfull.on('click.rgGallery', function (event) {
-                    if (mode === 'carousel')
-                        $esCarousel.elastislide('destroy');
-                    $esCarousel.hide();
-                    $viewfull.addClass('rg-view-selected');
-                    $viewthumbs.removeClass('rg-view-selected');
-                    mode = 'fullview';
-                    return false;
-                });
-
-                $viewthumbs.on('click.rgGallery', function (event) {
-                    _initCarousel();
-                    $viewthumbs.addClass('rg-view-selected');
-                    $viewfull.removeClass('rg-view-selected');
-                    mode = 'carousel';
-                    return false;
-                });
-
-                if (mode === 'fullview')
-                    $viewfull.trigger('click');
-
-            },
-            _addImageWrapper = function () {
-                if (itemsCount > 1) {
-                    // addNavigation
-                    var $navPrev = $rgGallery.find('a.rg-image-nav-prev'),
-                        $navNext = $rgGallery.find('a.rg-image-nav-next'),
-                        $imgWrapper = $rgGallery.find('div.rg-image');
-
-                    $navPrev.on('click.rgGallery', function (event) {
-                        _navigate('left');
-                        return false;
-                    });
-
-                    $navNext.on('click.rgGallery', function (event) {
-                        _navigate('right');
-                        return false;
-                    });
-
-                    // add touchwipe events on the large image wrapper
-                    $imgWrapper.touchwipe({
-                        wipeLeft: function () {
-                            _navigate('right');
-                        },
-                        wipeRight: function () {
-                            _navigate('left');
-                        },
-                        preventDefaultEvents: false
-                    });
-
-                    $(document).on('keyup.rgGallery', function (event) {
-                        if (event.keyCode == 39)
-                            _navigate('right');
-                        else if (event.keyCode == 37)
-                            _navigate('left');
-                    });
-
-                }
-
-            },
-            _navigate = function (dir) {
-
-                // navigate through the large images
-
-                if (anim) return false;
-                anim = true;
-
-                if (dir === 'right') {
-                    if (current + 1 >= itemsCount)
-                        current = 0;
-                    else
-                        ++current;
-                }
-                else if (dir === 'left') {
-                    if (current - 1 < 0)
-                        current = itemsCount - 1;
-                    else
-                        --current;
-                }
-
+        var anim = false;
+        var init = function () {
+            $items.add('<img src="/images/ajax-loader.gif"/>').imagesLoaded(function () {
+                // add options
+                _addViewModes();
+                // add large image wrapper
+                _addImageWrapper();
+                // show first image
                 _showImage($items.eq(current));
 
-            },
-            _showImage = function ($item) {
+                // pre load second image
+                if (current + 1 < itemsCount)
+                    _preLoadImg($items.eq(current + 1));
+            });
 
-                var $loader = $rgGallery.find('div.rg-loading').show();
+            // initialize the carousel
+            if (mode === 'carousel')
+                _initCarousel();
+        };
 
-                $items.removeClass('selected');
-                $item.addClass('selected');
+        var _initCarousel = function () {
+            // we are using the elastislide plugin:
+            // http://tympanus.net/codrops/2011/09/12/elastislide-responsive-carousel/
+            $esCarousel.show().elastislide({
+                imageW: 72,
+                border: 0,
+                onClick: function ($item) {
+                    if (anim) return false;
+                    anim = true;
+                    // on click show image
+                    _showImage($item);
+                    // change current
+                    current = $item.index();
 
-                var $thumb = $item.find('img'),
-                    largesrc = $thumb.data('large'),
-                    title = $thumb.data('description');
+                    var next = (current + 1) % itemsCount;
+                    _preLoadImg($items.eq(next));
+                    return false;
+                }
+            });
 
-                $('<img/>').load(function () {
-                    $rgGallery.find('div.rg-image').empty().append('<img src="' + largesrc + '"/>');
-                    if (title) {
-                        $rgGallery.find('div.rg-caption').show().text(title);
-                    } else {
-                        $rgGallery.find('div.rg-caption').hide();
-                    }
-                    $loader.hide();
+            // set elastislide's current to current
+            $esCarousel.elastislide('setCurrent', current);
 
-                    if (mode === 'carousel') {
-                        $esCarousel.elastislide('reload');
-                        $esCarousel.elastislide('setCurrent', current);
-                    }
+        };
 
-                    anim = false;
+        var _addViewModes = function () {
+            var $viewfull = $('#rg-view-full');
+            var $viewthumbs = $('#rg-view-thumbs');
 
-                }).attr('src', largesrc);
+            $viewfull.on('click.rgGallery', function (event) {
+                if (mode === 'carousel')
+                    $esCarousel.elastislide('destroy');
+                $esCarousel.hide();
+                $viewfull.addClass('rg-view-selected');
+                $viewthumbs.removeClass('rg-view-selected');
+                mode = 'fullview';
+                return false;
+            });
 
-            },
-            addItems = function ($new) {
+            $viewthumbs.on('click.rgGallery', function (event) {
+                _initCarousel();
+                $viewthumbs.addClass('rg-view-selected');
+                $viewfull.removeClass('rg-view-selected');
+                mode = 'carousel';
+                return false;
+            });
 
-                $esCarousel.find('ul').append($new);
-                $items = $items.add($($new));
-                itemsCount = $items.length;
-                $esCarousel.elastislide('add', $new);
+            if (mode === 'fullview')
+                $viewfull.trigger('click');
 
-            };
+        };
+        var _addImageWrapper = function () {
+            if (itemsCount > 1) {
+                // addNavigation
+                var $navPrev = $rgGallery.find('a.rg-image-nav-prev'),
+                    $navNext = $rgGallery.find('a.rg-image-nav-next'),
+                    $imgWrapper = $rgGallery.find('div.rg-image');
+
+                $navPrev.on('click.rgGallery', function (event) {
+                    _navigate('left');
+                    return false;
+                });
+
+                $navNext.on('click.rgGallery', function (event) {
+                    _navigate('right');
+                    return false;
+                });
+
+                $(document).on('keyup.rgGallery', function (event) {
+                    if (event.keyCode == 39)
+                        _navigate('right');
+                    else if (event.keyCode == 37)
+                        _navigate('left');
+                });
+
+            }
+
+        };
+
+            // navigate through the large images
+        var _navigate = function (dir) {
+            if (anim) return false;
+            anim = true;
+            var next;
+            if (dir === 'right') {
+                current = (current + 1) % itemsCount;
+                next = (current + 1) % itemsCount;
+            } else if (dir === 'left') {
+                --current;
+                if (current < 0)
+                    current += itemsCount;
+                next = current - 1;
+                if (next < 0)
+                    next += itemsCount;
+            }
+
+            _preLoadImg($items.eq(next));
+            _showImage($items.eq(current));
+            return false;
+        };
+
+            // show current big image, called by  _navigate
+        var _showImage = function ($item) {
+
+            var $loader = $rgGallery.find('div.rg-loading').show();
+
+            $items.removeClass('selected');
+            $item.addClass('selected');
+
+            var $thumb = $item.find('img'),
+                largesrc = $thumb.data('large'),
+                title = $thumb.data('description');
+
+            $('<img/>').load(function () {
+                $rgGallery.find('div.rg-image').empty().append('<img src="' + largesrc + '"/>');
+                if (title) {
+                    $rgGallery.find('div.rg-caption').show().text(title);
+                } else {
+                    $rgGallery.find('div.rg-caption').hide();
+                }
+                $loader.hide();
+
+                if (mode === 'carousel') {
+                    $esCarousel.elastislide('reload');
+                    $esCarousel.elastislide('setCurrent', current);
+                }
+
+                anim = false;
+
+            }).attr('src', largesrc);
+
+        };
+
+        var _preLoadImg = function ($item) {
+            new Image().src = $item.find('img').data('large');
+        };
+
+        var addItems = function ($new) {
+            $esCarousel.find('ul').append($new);
+            $items = $items.add($($new));
+            itemsCount = $items.length;
+            $esCarousel.elastislide('add', $new);
+        };
 
         return {
             init: init,
