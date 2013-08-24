@@ -235,7 +235,7 @@ $(document).ready(function(){
     {# 文章区域 #}
     <div class="post" id="post_{{ post.key.id() }}">
         {% if post.privilege != 2 %}
-            <h1 class=title>{{ post.title }}</h1>
+            <h1 class="post_title">{{ post.title }}</h1>
             <div class="postinfo">
                     {{ post.date|datetime }} | {{ post.author.nickname() }}
                     {% if post.tags %}
@@ -252,7 +252,7 @@ $(document).ready(function(){
             </div>
             <div class="post_body">{{ post.content|safe }}</div>
         {% else %}
-            {{ post.content|safe }}
+            <div class="post_body">{{ post.content|safe }}</div>
             {% if isadmin() %}
             <br /><a href="javascript:void(0);" onclick="deleteBlogPost('{{ post.key.id() }}', '{{ post.title }}');">删除</a>
             | <a href="/post/edit?postid={{ post.key.id() }}">编辑</a>

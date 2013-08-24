@@ -1,26 +1,15 @@
-<style>
-    div.c_title {
-        text-overflow: ellipsis;
-        white-space: nowrap;
-	    overflow: hidden;
-    }
-    div.c_content {
-        color:gray;
-        padding-top:4px;
-    }
-</style>
 <div class="block">
     <div class="header" id="commenthead">最近评论</div>
     <div class="content" id="commentcontent">
         <ul class="block_ul">
             {% for comment in get_recent_comments() %}
             <li>
+                <a href="/post/{{comment.postId}}#c{{comment.key.id()}}" title="{{comment.username}} on {{get_post_title(comment.postId)}}">
                 <div class="c_title">
-                    <a href="/post/{{comment.postId}}#c{{comment.key.id()}}" title="{{comment.username}} on {{get_post_title(comment.postId)}}">
                         {{comment.username}} on {{get_post_title(comment.postId)}}
-                    </a>
                 </div>
                 <div class="c_content">{{ comment.content }}</div>
+                </a>
             </li>
             {% endfor %}
         </ul>

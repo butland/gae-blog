@@ -237,8 +237,8 @@ div.post {
 
 div.postinfo {
 	border-top: 1px solid #CCCCCC;
-    padding-top: 3px;
-	margin-bottom: 5px;
+    padding-top: 4px;
+	padding-bottom: 4px;
 	font-size: 12px;
 	color: #333333;
 }
@@ -258,19 +258,19 @@ div.post_body a {
     color: #049;
 }
 
-.title {
+div .post_title {
 	font-family: Georgia, Times, serif;
-	font-size: 20px;
-	line-height: 120%;
+	font-size: 22px;
+	line-height: 1.4;
 	margin: 0;
 	padding: 0;
 }
 
-.title a {
+div .post_title a {
 	color: #333333;
 }
 
-.title a:HOVER {
+div .post_title a:HOVER {
     color: #333333;
 }
 
@@ -351,20 +351,29 @@ div.block .content {
 	padding: 0;
 }
 
-ul.block_ul{
+ul.block_ul {
 	list-style:none outside none;
     padding: 0;
     margin: 0;
 }
 
-ul.block_ul li{
+ul.block_ul li {
 	list-style:none outside none;
-	padding:8px 10px;
     border-bottom: 1px solid #eeeeee;
 }
 
 ul.block_ul li:last-child {
     border-bottom: none;
+}
+
+ul.block_ul li a {
+    display: block;
+	padding:8px 10px;
+}
+
+ul.block_ul li a:hover {
+    text-decoration: none;
+    background-color: #EEE;
 }
 
 div.block .item {
@@ -383,6 +392,18 @@ a.cloud_tag {
     border-radius:2px;
 }
 
+/* for recent comment*/
+div.c_title {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+div.c_content {
+    color:gray;
+    padding-top:4px;
+}
+
 div.footer {
 	text-align: left;
 	font-size: 12px;
@@ -390,6 +411,7 @@ div.footer {
 	padding-top: 5px;
 	padding-bottom: 15px;
 	border-top: 1px solid #CCCCCC;
+    line-height: 1.2;
 }
 
 div.footer a {
