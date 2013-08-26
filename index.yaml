@@ -1,5 +1,22 @@
 indexes:
-#- kind: Resource
-#  properties:
-#  - name: date
-#    direction: desc
+- kind: Post
+  properties:
+    - name: privilege
+    - name: date
+      direction: desc
+- kind: Post
+  properties:
+    - name: privilege
+    - name: tags
+    - name: date
+      direction: desc
+- kind: Comment
+  properties:
+    - name: postId
+    - name: date
+      direction: desc
+- kind: Tag
+  properties:
+    - name: cid
+    - name: name
+      direction: desc
