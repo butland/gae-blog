@@ -67,7 +67,10 @@ class Post(ndb.Model):
     @staticmethod
     @cache(name="post-${postid}")
     def getpost(postid):
-        return Post.get_by_id(postid)
+        try:
+            return Post.get_by_id(postid)
+        except:
+            return None
 
     @staticmethod
     @evictgroup("post")
