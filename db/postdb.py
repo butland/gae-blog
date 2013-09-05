@@ -3,6 +3,8 @@
 from google.appengine.ext import ndb
 from datetime import datetime, timedelta
 from tools.decorators import *
+from tools import text_util
+import re
 
 # deleted
 PRIVILEGE_DEL = -1
@@ -77,3 +79,13 @@ class Post(ndb.Model):
     @evict(name="post-${post}")
     def savepost(post):
         return post.put()
+
+    def abstract(self):
+        """
+        return abstract of content.
+        It is implemented by simple way now.
+        """
+        content = self.content
+        content = re.sub(r'<[^<>]+>', '', content)
+        content = text_util.subStr(content, 400 * 2)
+        return content

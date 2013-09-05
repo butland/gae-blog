@@ -1,3 +1,4 @@
+
 __author__ = 'dongliu'
 
 import jinja2
@@ -10,31 +11,7 @@ from db.tagdb import *
 from db.commentdb import *
 from datetime import datetime, timedelta
 from web import app
-
-
-def subStr(str, length):
-    #str must be unicode
-    if str is None:
-        return None
-    if len(str) * 2 < length:
-        return str
-    pos = -1
-    curlen = 0
-    low = 0x4E00
-    high = 0x9FA5
-    for ch in str:
-        if low <= ord(ch) <= high:
-            curlen += 2
-        else:
-            curlen += 1
-        pos += 1
-        if curlen > length:
-            break
-    if pos >= len(str):
-        return str
-    if pos > 2:
-        pos -= 2
-    return str[0:pos] + '...'
+from tools import text_util
 
 
 # url encode fuc for jinja
@@ -69,7 +46,7 @@ def get_alltags():
 def get_recent_comments():
     comment_list = Comment.get_commentlist(0, Config()["recentcommentnum"])
     for comment in comment_list:
-        comment.content = subStr(comment.content, 33*2)
+        comment.content = text_util.subStr(comment.content, 33*2)
     return comment_list
 
 
@@ -79,7 +56,7 @@ def get_fortune():
 
 
 def get_post_title(postid):
-    return Post.getpost(postid).title;
+    return Post.getpost(postid).title
 
 
 @app.template_filter('datetime')

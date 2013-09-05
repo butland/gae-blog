@@ -44,7 +44,7 @@
         </div>
         <div class="post_body">
             {% if config.abstract %}
-                {{ post.summary()|safe }}
+                <p>{{ post.abstract()|safe }} <a href="/post/{{ post.key.id() }}">查看全部</a> </p>
             {% else %}
                 {{ post.content|safe }}
             {% endif %}
