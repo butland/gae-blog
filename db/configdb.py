@@ -11,7 +11,7 @@ class Configure(ndb.Model):
 
 def setdict(pdict, name, value):
     ovalue = pdict[name]
-    if type(ovalue) == type(1):
+    if  type(ovalue) == type(1):
         pdict[name] = int(value)
     elif type(ovalue) == type(u''):
         pdict[name] = value

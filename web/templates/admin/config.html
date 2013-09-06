@@ -3,25 +3,31 @@
 {% block main %}
 <div style="padding:20px 10px 10px;">
 <style>
-label {
+label.left {
     display:inline-block;
     width:150px;
 }
 </style>
 <form action="/admin/config" method="post" >
-    <label for="heading">标题:</label><input id="heading" name="heading" type="text" size=20 value="{{config.heading}}" /> <br />
-    <label for="heading">副标题:</label><input id="subheading" name="subheading" type="text" size=50 value="{{config.subheading}}" />  <br />
-    <label for="heading">域名:</label><input id="host" name="host" type="text" size=40 value="{{config.host}}" />  <br />
-    <label for="heading">列表显示摘要:</label><input id="abstract" name="abstract" type="checkbox" {% if config.abstract %}checked=checked{% endif %} />  <br />
-    <label for="heading">每页文章数:</label><input id="postnumperpage" name="postnumperpage" type="number" value="{{config.postnumperpage}}" />  <br />
-    <label for="heading">每页评论数:</label><input id="commentnumperpage" name="commentnumperpage" type="number" value="{{config.commentnumperpage}}" />  <br />
-    <label for="heading">Rss文章数量:</label><input id="feednum" name="feednum" type="number" value="{{config.feednum}}" />  <br />
-    <label for="heading">最近评论数量:</label><input id="recentcommentnum" name="recentcommentnum" type="number" value="{{config.recentcommentnum}}" />  <br />
-    <label for="heading">最近文章数量:</label><input id="recentpostnum" name="recentpostnum" type="number" value="{{config.recentpostnum}}" />  <br />
-    <label for="heading">使用blobstore存储:</label><input id="blobEnable" name="blobEnable" type="checkbox" {% if config.blobEnable %}checked=checked{% endif %} />  <br />
-    <label for="heading">picasa用户名:</label><input id="picasaalbumname" name="picasaalbumname" type="text" size=40 value="{{config.picasaalbumname}}" />  <br />
-    <label for="gauid">GA分析id:</label><input id="gauid" name="gauid" type="text" size=40 value="{{config.gauid}}" />  <br />
-    <label for="baidusiteid">百度统计id:</label><input id="baidusiteid" name="baidusiteid" type="text" size=40 value="{{config.baidusiteid}}" />  <br />
+    <label class="left">标题:</label><input name="heading" type="text" size=20 value="{{config.heading}}" /> <br />
+    <label class="left">副标题:</label><input name="subheading" type="text" size=50 value="{{config.subheading}}" />  <br />
+    <label class="left">域名:</label><input name="host" type="text" size=40 value="{{config.host}}" />  <br />
+    <label class="left">列表显示:</label>
+        <input id="abstract" name="abstract" type="radio" value="true" {% if config.abstract %}checked=checked{% endif %} /> <label for="abstract">摘要</label>
+        <input id="fulltext" name="abstract" type="radio" value="false" {% if not config.abstract %}checked=checked{% endif %} /> <label for="fulltext">全文</label>
+    <br />
+    <label class="left">每页文章数:</label><input name="postnumperpage" type="number" value="{{config.postnumperpage}}" />  <br />
+    <label class="left">每页评论数:</label><input name="commentnumperpage" type="number" value="{{config.commentnumperpage}}" />  <br />
+    <label class="left">Rss文章数量:</label><input name="feednum" type="number" value="{{config.feednum}}" />  <br />
+    <label class="left">最近评论数量:</label><input name="recentcommentnum" type="number" value="{{config.recentcommentnum}}" />  <br />
+    <label class="left">最近文章数量:</label><input name="recentpostnum" type="number" value="{{config.recentpostnum}}" />  <br />
+    <label class="left">文件存储:</label>
+        <input id="blobstore" name="blobEnable" type="radio" value="true" {% if config.blobEnable %}checked=checked{% endif %} />  <label for="blobstore">Blobstore(需Enable Billing)</label>
+        <input id="datastore" name="blobEnable" type="radio" value="false" {% if not config.blobEnable %}checked=checked{% endif %} />  <label for="datastore">数据库</label>
+    <br />
+    <label class="left">picasa用户名:</label><input name="picasaalbumname" type="text" size=40 value="{{config.picasaalbumname}}" />  <br />
+    <label class="left">GA分析id:</label><input name="gauid" type="text" size=40 value="{{config.gauid}}" />  <br />
+    <label class="left">百度统计id:</label><input name="baidusiteid" type="text" size=40 value="{{config.baidusiteid}}" />  <br />
     <input type="submit" class="button" />
 </form>
 </div>
