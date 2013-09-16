@@ -6,7 +6,7 @@ from db.postdb import *
 from db.tagdb import *
 from db.commentdb import *
 from tools.pagertool import *
-from tools import (pinyin, PyRSS2Gen)
+from tools import (pinyin, PyRSS2Gen, platform)
 from service import postindex
 from db.configdb import Config
 from datetime import (datetime, timedelta, time)
@@ -111,7 +111,12 @@ def post_list(pagenum, tag, archive):
         tag=tag,
         archive=archive)
 
-    return render_template('post_list.html', postlist=postlist, pager=pager, tag=tag, archive=archive, config=Config())
+    pf = platform.get_platform(request.headers.get('User-Agent'))
+    if pf == platform.PHONE:
+        tpl = "m/m_post_list.html"
+    else:
+        tpl = "post_list.html"
+    return render_template(tpl, postlist=postlist, pager=pager, tag=tag, archive=archive, config=Config())
 
 @app.route('/post/<int:postid>', methods=['GET'])
 def view_post(postid):
@@ -129,7 +134,12 @@ def view_post(postid):
     #     # search api may not be enabled, or have bugs.
     #     similars = []
 
-    return render_template('post_view.html', post=post, similars=[], config=Config())
+    pf = platform.get_platform(request.headers.get('User-Agent'))
+    if pf == platform.PHONE:
+        tpl = "m/m_post.html"
+    else:
+        tpl = "post_view.html"
+    return render_template(tpl, post=post, similars=[], config=Config())
 
 
 @app.route('/post/edit', methods=['GET'])
