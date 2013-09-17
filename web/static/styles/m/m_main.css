@@ -1,0 +1,121 @@
+body {
+    margin: 0;
+    background-color: #e4e4e4;
+    font: "1rem/1.5 normal 'Droid Sans Fallback',sans-serif";
+}
+
+form {
+    margin: 0;
+    display: inline
+}
+
+img {
+    margin: 2px;
+}
+
+a {
+    text-decoration: none;
+    color: #444444;
+}
+
+div.nav {
+    background-color: #444444;
+    line-height: 2em;
+    color: #f8f8f8;
+    padding: 10px 8px;
+    height: 40px;
+    font-size: 1.25rem;
+}
+div.nav a {
+    color: #f8f8f8;
+}
+
+div.post_item {
+    border: 1px solid #d4d4d4;
+    border-top-color: #d7d7d7;
+    border-bottom-color: #cbcbcb;
+
+    /*border-radius: 5px;*/
+    background-color: #fff;
+    box-shadow:0 1px 1px rgba(49,60,75,.35);
+    margin: 10px 10px 13px;
+    border-radius: 4px;
+}
+
+div.post_item div.post_title {
+    overflow: hidden;
+    font-size: 1.2rem;
+    line-height: 1.5rem;
+    padding: 5px 10px 0;
+    color: #417fec;
+}
+
+div.post_item div.post_info {
+    font-size: 1rem;
+    background-color: #F9F9F9;
+    border-top: 1px solid #d7d7d7;
+}
+
+div.post_item div.post_info a.info_block {
+    display: inline-block;
+    width: auto;
+    font-size: 0.8rem;
+    border: 0 solid #d7d7d7;
+    border-right-width: 1px;
+    padding: 10px 10px;
+}
+
+div.post_item div.post_body {
+    padding: 10px 10px 15px;
+    font-size: 1rem;
+}
+
+/* for page */
+div.page {
+    margin-top: 5px;
+    text-align: center;
+}
+
+div.page a {
+    text-decoration: none;
+    color: #222;
+    border: 1px solid #CCC;
+    padding-left: 10px;
+    padding-right: 10px;
+    display: inline-block;
+    height: 1.4em;
+    line-height: 1.4em;
+    border-radius: 3px;
+    position: relative;
+}
+
+div.page a.first {
+    float: left;
+    margin-left: 5px;
+}
+
+div.page a.last {
+    float: right;
+    margin-right: 5px;
+}
+
+div.page select {
+    color: #222;
+    border: 1px solid #CCC;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    position: absolute;
+    left: 0;
+    right: 0;
+    z-index: 99;
+    -webkit-appearance:none;
+}
+
+div.footer {
+    padding-top: 5px;
+    text-align: left;
+    font-size: small;
+    color: #555555;
+    line-height: 1.2;
+}

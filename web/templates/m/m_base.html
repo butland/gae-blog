@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head></head>
+    <meta name="viewport" content="width=device-width"/>
+    <title>{{ config.heading }} {% block title %}{% endblock %}</title>
+    <link rel="stylesheet" type="text/css" href="/styles/m/m_main.css" />
+
+<body>
+
+<div class="nav">
+    <a href="http://{{ config.host }}/">{{ config.heading }}</a> | {{ config.subheading }}
+</div>
+
+<div class="body">
+    {% block main %}{% endblock %}
+    <div class="footer">
+        Google App Engine 强力驱动 | Get Source Code from <a href="https://github.com/xiaxiaocao/gae-blog" target="_blank">GitHub</a><br />
+        版权所有: 2008-2013
+    </div>
+</div>
+
+{# 各种网页跟踪代码. #}
+{% include '/inc/pagetracker.html' %}
+</body>
+
+</html>

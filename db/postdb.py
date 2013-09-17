@@ -80,12 +80,12 @@ class Post(ndb.Model):
     def savepost(post):
         return post.put()
 
-    def abstract(self):
+    def abstract(self, length=400):
         """
         return abstract of content.
         It is implemented by simple way now.
         """
         content = self.content
         content = re.sub(r'<[^<>]+>', '', content)
-        content = text_util.subStr(content, 400 * 2)
+        content = text_util.subStr(content, length * 2)
         return content
