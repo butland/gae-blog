@@ -35,11 +35,10 @@ div.post_item {
     border-top-color: #d7d7d7;
     border-bottom-color: #cbcbcb;
 
-    /*border-radius: 5px;*/
     background-color: #fff;
-    box-shadow:0 1px 1px rgba(49,60,75,.35);
+    /*box-shadow:0 1px 1px rgba(49,60,75,.35);*/
     margin: 10px 10px 13px;
-    border-radius: 4px;
+    /*border-radius: 4px;*/
 }
 
 div.post_item div.post_title {
@@ -68,10 +67,18 @@ div.post_item div.post_info a.info_block {
 div.post_item div.post_body {
     padding: 10px 10px 15px;
     font-size: 1rem;
+    overflow: hidden;
+    word-break:break-all;
+    word-wrap: break-word;
+}
+
+div.post_body img {
+    max-width: 100% !important;
 }
 
 /* for page */
 div.page {
+    padding: 0 10px;
     margin-top: 5px;
     text-align: center;
 }
@@ -80,23 +87,20 @@ div.page a {
     text-decoration: none;
     color: #222;
     border: 1px solid #CCC;
-    padding-left: 10px;
-    padding-right: 10px;
+    padding: 0 10px;
     display: inline-block;
     height: 1.4em;
     line-height: 1.4em;
-    border-radius: 3px;
+    /*border-radius: 3px;*/
     position: relative;
 }
 
 div.page a.first {
     float: left;
-    margin-left: 5px;
 }
 
 div.page a.last {
     float: right;
-    margin-right: 5px;
 }
 
 div.page select {
@@ -113,9 +117,9 @@ div.page select {
 }
 
 div.footer {
-    padding-top: 5px;
+    padding: 10px 10px 0;
     text-align: left;
-    font-size: small;
+    font-size: 0.7rem;
     color: #555555;
     line-height: 1.2;
 }

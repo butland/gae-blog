@@ -16,7 +16,7 @@
                 <a class="info_block">{{ post.date|datetime }}</a>
                 {% if post.tags %}
                 {% for tag in post.tags %}
-                    <a class="info_block" href="/post/list/{{ tag | tag }}/" >{{ tag }}{% if not loop.last %}, {% endif %}</a>
+                    <a class="info_block" href="/post/list/{{ tag | tag }}/" >{{ tag }}</a>
                 {% endfor %}
                 {% endif %}
                 <a class="info_block" href="/post/{{ post.key.id() }}#comments">{{ post.commentCount or 0 }}条评论</a>
