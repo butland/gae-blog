@@ -1,5 +1,6 @@
 __author__ = 'dongliu'
 
+
 class Pager(object):
     def __init__(self, total, page, pagesize):
         self.total = total

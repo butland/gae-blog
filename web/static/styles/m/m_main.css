@@ -123,3 +123,10 @@ div.footer {
     color: #555555;
     line-height: 1.2;
 }
+
+blockquote {
+	border: 1px solid #ECEDED;
+	margin: 5px;
+	padding: 3px 1px 3px 1px;
+    background-color: #F6F6F6;
+}

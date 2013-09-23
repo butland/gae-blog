@@ -480,10 +480,11 @@ div.quote {
 	padding: 3px 1px 3px 1px;
 }
 
-blockquote{
-	border: 1px solid #DCDDDD;
-	margin: 5px;
-	padding: 3px 1px 3px 1px;
+blockquote {
+    border: 1px solid #ECEDED;
+    margin: 5px;
+    padding: 3px 1px 3px 1px;
+    background-color: #F6F6F6;
 }
 
 div.commentavatar {
