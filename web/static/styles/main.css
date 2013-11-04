@@ -50,7 +50,7 @@ a.metro-blue {
 }
 
 span.metro_flow{
-	font-family:verdana,sans-serif,"Microsoft YaHei","Microsoft JhengHei",STHeiti,SimHei;
+	font-family:verdana,sans-serif,"Microsoft YaHei","Microsoft JhengHei",STHeiti,SimHei,serif;
 	color:white;
 	text-decoration: none;
 }
@@ -107,16 +107,15 @@ input.searchbox {
 }
 
 input.button {
-    background-color: #e4e4e4;
-    border-radius:3px;
     border:1px solid #dcdcdc;
+    background-color: #cdcdcd;
     font-size:14px;
     padding:6px 14px;
 }
 
 input.button:hover {
     cursor: pointer;
-    background-color: #cdcdcd;
+    background-color: #e4e4e4;
 }
 
 div#header {
@@ -270,7 +269,7 @@ div .post_title a {
 	color: #333333;
 }
 
-div .post_title a:HOVER {
+div .post_title a:hover {
     color: #333333;
 }
 
@@ -387,9 +386,15 @@ a.cloud_tag {
     line-height: 16px;
     background: #deeefa;
     float:left;
-    padding: 4px 4px;
+    padding: 4px 6px;
     border: 1px solid #d0e0f0;
-    border-radius:2px;
+    border-radius: 2px;
+}
+
+a.cloud_tag:hover {
+    border: 1px solid #b3c0c9;
+    background: #6877c6;
+    text-decoration: none;
 }
 
 /* for recent comment*/
@@ -411,15 +416,7 @@ div.footer {
 	padding-top: 5px;
 	padding-bottom: 15px;
 	border-top: 1px solid #CCCCCC;
-    line-height: 1.2;
-}
-
-div.footer a {
-    color: #35383D;
-}
-
-div.footer a {
-    text-decoration: underline;
+    line-height: 1.4;
 }
 
 div.box {

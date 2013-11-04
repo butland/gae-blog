@@ -306,7 +306,7 @@ $(document).ready(function(){
                         display:inline-block;
                     }
                 </style>
-                <label for="username" class="des">昵称</label><input type=text name="username" id="username" {%if getuser()%}readonly="readonly" value="{{ getuser().nickname() }}"{%endif%} size=30 />*<br />
+                <label for="username" class="des">昵称</label><input type=text name="username" id="username" {%if getuser()%}readonly="readonly" value="{{ getuser().nickname() }}"{%endif%} size=30 /><font color=red>*</font><br />
                 <label for="email" class="des">电子邮箱</label><input type="email" name="email" id="email" {%if getuser()%}readonly="readonly" value="{{ getuser().email() }}"{%endif%} size=30 />(不公开, 当您的评论有回复会收到邮件通知)<br />
                 <label for="homepage" class="des">个人主页</label><input type="url" name="homepage" id="homepage" size=50 value="" /><br />
 
@@ -314,12 +314,12 @@ $(document).ready(function(){
                     你正在回复<span id="replyname"></span>的评论.
                     <a href='javascript:void(0)' onclick="removeReply()" title="取消恢复指定评论">X</a>
                 </span>
-                <textarea name="content" id="content" style="width:80%;height:100px;font-size:12px;"></textarea>
+                <textarea name="content" id="content" style="width:80%;height:100px;font-size:12px;"></textarea><font color=red>*</font>
                 <input type="hidden" name="postid" id="postid" value="{{ post.key.id() }}" /> <br />
 
                 {% if not getuser() %}
                     <label for="code" class="des"> 验证码</label>
-                    <input type=text name="code" id="code" size=6 autocomplete="off" />*
+                    <input type=text name="code" id="code" size=6 autocomplete="off" /><font color=red>*</font>
                     <a href="javascript:void(0);"  onclick="refreshcaptcha();" style="border:none;" ><script>
                         document.write('<img id="captcha_img" src="/captcha?seq=' + seq + '" style="display:inline;vertical-align:middle;border:none;" />');
                     </script></a>
