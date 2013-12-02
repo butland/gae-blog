@@ -201,7 +201,7 @@ ul.menuul li a {
 }
 
 span.downarrow_white_middle {
-    background: url(/images/signals.png) -114px -33px;
+    background: url("/images/signals.png") -114px -33px;
     width:8px;height:8px;
     display:inline-block;
     margin-left:4px;
@@ -400,6 +400,7 @@ a.cloud_tag:hover {
 /* for recent comment*/
 div.c_title {
     text-overflow: ellipsis;
+    -ms-text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
 }
