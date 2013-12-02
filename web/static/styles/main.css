@@ -400,7 +400,6 @@ a.cloud_tag:hover {
 /* for recent comment*/
 div.c_title {
     text-overflow: ellipsis;
-    -ms-text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
 }

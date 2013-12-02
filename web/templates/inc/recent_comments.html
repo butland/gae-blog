@@ -5,10 +5,8 @@
             {% for comment in get_recent_comments() %}
             <li>
                 <a href="/post/{{comment.postId}}#c{{comment.key.id()}}" title="{{comment.username}} on {{get_post_title(comment.postId)}}">
-                <div class="c_title">
-                        {{comment.username}} on {{get_post_title(comment.postId)}}
-                </div>
-                <div class="c_content">{{ comment.content }}</div>
+                <div class="c_title">{{ comment.username }} on {{get_post_title(comment.postId)}}</div>
+                    <div class="c_content">{{ comment.content }}</div>
                 </a>
             </li>
             {% endfor %}

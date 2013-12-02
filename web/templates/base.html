@@ -17,7 +17,10 @@
     {# disable IE6 IE7 #}
     <!--[if lte IE 7]> <script type="text/javascript"> window.location='/html/browser.html'; </script> <![endif]-->
     {# ie8 fallback #}
-    <!--[if IE 8]> <script src="http://libs.baidu.com/jquery/1.9.0/jquery.min.js"></script> <![endif]-->
+    <!--[if IE 8]>
+        <script src="http://libs.baidu.com/jquery/1.9.0/jquery.min.js"></script>
+         <link rel="stylesheet" type="text/css" href="/styles/ie8.css" />
+    <![endif]-->
     {# feed #}
     {% block script %}{% endblock %}
     <script>
