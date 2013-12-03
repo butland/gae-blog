@@ -299,21 +299,37 @@ $(document).ready(function(){
                 document.write('<input type="hidden" id="input_seq" name="seq" value="' + seq + '" />');
             </script>
             {% endif %}
-            <div style="line-height: 200%;">
-                <style>
-                    label.des {
-                        width:100px;
-                        display:inline-block;
-                    }
-                </style>
+
+            <style>
+                div.comment_area {
+                    line-height: 200%;
+                    padding-bottom: 10px;
+                }
+                label.des {
+                    width:100px;
+                    display:inline-block;
+                }
+                div#replytext {
+                    border:1px solid #CCCCCC;
+                    background-color: #b3c0c9;
+                    line-height: 110%;
+                    float: left;
+                    padding: 2px 4px;
+                    margin: 5px 0 0;
+                }
+            </style>
+            <div class="comment_area">
                 <label for="username" class="des">昵称</label><input type=text name="username" id="username" {%if getuser()%}readonly="readonly" value="{{ getuser().nickname() }}"{%endif%} size=30 /><font color=red>*</font><br />
                 <label for="email" class="des">电子邮箱</label><input type="email" name="email" id="email" {%if getuser()%}readonly="readonly" value="{{ getuser().email() }}"{%endif%} size=30 />(不公开, 当您的评论有回复会收到邮件通知)<br />
                 <label for="homepage" class="des">个人主页</label><input type="url" name="homepage" id="homepage" size=50 value="" /><br />
 
-                <span id="replytext" style="display:none;border:1px solid #CCCCCC;padding:1px;" >
-                    你正在回复<span id="replyname"></span>的评论.
-                    <a href='javascript:void(0)' onclick="removeReply()" title="取消恢复指定评论">X</a>
-                </span>
+                <div>
+                    <div id="replytext" style="display:none;" >
+                        你正在回复<span id="replyname"></span>的评论.
+                        <a href='javascript:void(0)' onclick="removeReply()" title="取消恢复指定评论">X</a>
+                    </div>
+                    <div style="clear:both"></div>
+                </div>
                 <textarea name="content" id="content" style="width:80%;height:100px;font-size:12px;"></textarea><font color=red>*</font>
                 <input type="hidden" name="postid" id="postid" value="{{ post.key.id() }}" /> <br />
 
