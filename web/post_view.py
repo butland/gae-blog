@@ -1,23 +1,20 @@
 #coding=utf-8
 __author__ = 'dongliu'
 
-from db.configdb import *
+from google.appengine.api import (users, taskqueue)
+
 from db.postdb import *
 from db.tagdb import *
 from db.commentdb import *
 from tools.pagertool import *
 from tools import (pinyin, PyRSS2Gen, platform)
-from service import postindex
 from db.configdb import Config
-from datetime import (datetime, timedelta, time)
-import random
 import webtools
-from google.appengine.api import (users, taskqueue)
 from flask import (Response, render_template, abort, request, redirect, jsonify)
 from web import app
 
 
-def _emptyPost():
+def _empty_post():
     post = Post()
     post.title = ''
     post.content = ''
@@ -39,8 +36,8 @@ def _post_change(opost, post):
     """
     if _post_public(opost):
         if _post_public(post):
-            oarchive = (opost.date+timedelta(hours=8)).strftime('%Y-%m')
-            archive = (post.date+timedelta(hours=8)).strftime('%Y-%m')
+            oarchive = (opost.date + timedelta(hours=8)).strftime('%Y-%m')
+            archive = (post.date + timedelta(hours=8)).strftime('%Y-%m')
             if oarchive != archive:
                 Tag.decrease(CID_ARCHIVE, oarchive)
                 Tag.increase(CID_ARCHIVE, archive)
@@ -52,7 +49,7 @@ def _post_change(opost, post):
                 Tag.increase(CID_TAG, tag)
         else:
             Tag.decrease(CID_COUNTER, NAME_ALLPOST)
-            Tag.decrease(CID_ARCHIVE, (opost.date+timedelta(hours=8)).strftime('%Y-%m'))
+            Tag.decrease(CID_ARCHIVE, (opost.date + timedelta(hours=8)).strftime('%Y-%m'))
             for tag in opost.tags:
                 if tag:
                     Tag.decrease(CID_TAG, tag)
@@ -60,12 +57,13 @@ def _post_change(opost, post):
     else:
         if _post_public(post):
             Tag.increase(CID_COUNTER, NAME_ALLPOST)
-            Tag.increase(CID_ARCHIVE, (post.date+timedelta(hours=8)).strftime('%Y-%m'))
+            Tag.increase(CID_ARCHIVE, (post.date + timedelta(hours=8)).strftime('%Y-%m'))
             for tag in post.tags:
                 if tag:
                     Tag.increase(CID_TAG, tag)
         else:
             pass
+
 
 @app.route('/', methods=['GET'], defaults={'tag': None, "archive": None, "pagenum": 1})
 @app.route('/post', methods=['GET'], defaults={'tag': None, "archive": None, "pagenum": 1})
@@ -118,6 +116,7 @@ def post_list(pagenum, tag, archive):
         tpl = "post_list.html"
     return render_template(tpl, postlist=postlist, pager=pager, tag=tag, archive=archive, config=Config())
 
+
 @app.route('/post/<int:postid>', methods=['GET'])
 def view_post(postid):
     """ show detail post."""
@@ -155,10 +154,11 @@ def edit_post():
         post = Post.getpost(postid)
     else:
         # new
-        post = _emptyPost()
+        post = _empty_post()
     alltags = Tag.get_taglist(CID_TAG)
-    taglist = [{"name":tag.name, "spell":pinyin.getpinyin(tag.name)} for tag in alltags if tag]
+    taglist = [{"name": tag.name, "spell": pinyin.getpinyin(tag.name)} for tag in alltags if tag]
     return render_template('post_edit.html', post=post, taglist=taglist, config=Config())
+
 
 @app.route('/post/update', methods=['POST'])
 def update_post():
@@ -180,12 +180,12 @@ def update_post():
         post.last_modify_date = datetime.today()
         post.last_modify_by = users.get_current_user()
     else:
-        post = _emptyPost()
+        post = _empty_post()
         opost = None
         post.author = users.get_current_user()
     post.title = request.values.get('title')
     post.content = request.values.get('content')
-    post.tags = [ tag for tag in request.values.getlist('tags') if tag ]
+    post.tags = [tag for tag in request.values.getlist('tags') if tag]
     post.privilege = int(request.values.get('privilege'))
     post.date = datetime.strptime(request.values.get('pubdate'), '%Y-%m-%dT%H:%M') - timedelta(hours=8)
     newid = Post.savepost(post)
@@ -242,11 +242,11 @@ def feed(tag):
             link="http://" + config["host"] + "/post/" + str(post.key.id()),
             description=post.content,
             pubDate=post.date,
-            ))
+        ))
     rss = PyRSS2Gen.RSS2(
         title=title,
         link=link,
         description=description,
         items=items,
-        )
+    )
     return Response(rss.to_xml(), mimetype='application/rss+xml')

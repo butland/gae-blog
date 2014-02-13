@@ -1,7 +1,7 @@
 #encoding=utf-8
 
 from google.appengine.api import users
-from pygments.lexers.agile import PythonLexer
+
 from service.fortune import *
 from flask import (Response, request, abort)
 from web import app
@@ -9,9 +9,11 @@ from pygments import highlight
 from pygments.formatters import HtmlFormatter
 from pygments.lexers import get_lexer_by_name
 
+
 @app.route('/tools/fortune', methods=['GET', 'POST'])
 def fortune():
     return Response(rand_fortune(), mimetype='text/plain')
+
 
 @app.route('/tools/highlight', methods=['GET', 'POST'])
 def highlight_code():

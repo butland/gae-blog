@@ -3,13 +3,14 @@
 __author__ = 'dongliu'
 
 import urllib
-from db.filedb import *
-from google.appengine.ext.blobstore import blobstore
-from google.appengine.ext.webapp import blobstore_handlers
-from google.appengine.api import users
 from datetime import datetime
+
+from google.appengine.api import users
+
+from db.filedb import *
 from web import app
-from flask import (request, send_file, jsonify, make_response, abort, redirect)
+from flask import (request, jsonify, make_response, abort, redirect)
+
 
 CACHE_DURATION = 24 * 60 * 60 * 1000
 
@@ -18,19 +19,19 @@ CACHE_DURATION = 24 * 60 * 60 * 1000
 @app.route('/showimage/<int:fileid>', methods=['GET'])
 def show_file(fileid):
     #TODO: add condition reqeust.
-    file = File.getfile(fileid)
+    f = File.getfile(fileid)
 
-    if not file:
+    if not f:
         abort(404)
 
-    filename = file.fileName
+    filename = f.fileName
     if filename:
         idx = filename.rfind('/')
         if idx > 0:
             filename = filename[idx + 1:]
 
-    resp = make_response(file.content, 200)
-    resp.headers['Content-Type'] = file.mimeType.encode('utf-8')
+    resp = make_response(f.content, 200)
+    resp.headers['Content-Type'] = f.mimeType.encode('utf-8')
     resp.headers["Cache-Control"] = str(CACHE_DURATION)
     resp.headers["Content-Disposition"] = "inline; filename=" + urllib.quote(filename.encode("utf-8"))
     return resp
@@ -42,12 +43,12 @@ def upload_file():
         abort(403)
     utype = request.values.get("type")
     fileinfo = request.files['file']
-    file = File()
-    file.fileName = fileinfo.filename
-    file.mimeType = fileinfo.mimetype
-    file.content = fileinfo.getvalue()
-    file.date = datetime.today()
-    fileid = File.savefile(file).id()
+    f = File()
+    f.fileName = fileinfo.filename
+    f.mimeType = fileinfo.mimetype
+    f.content = fileinfo.getvalue()
+    f.date = datetime.today()
+    fileid = File.savefile(f).id()
     if utype == 'redactor_img':
         # for redactor img update call back
         return jsonify({"filelink": "/showfile/%d" % fileid})
@@ -62,6 +63,6 @@ def upload_file():
 @app.route('/file/delete', methods=['POST'])
 def delete_file():
     fileid = int(request.values.get("fileid"))
-    file = File.getfile(fileid)
-    File.delfile(file)
+    f = File.getfile(fileid)
+    File.delfile(f)
     return jsonify({'state': 0, 'msg': ''})

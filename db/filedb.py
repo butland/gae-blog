@@ -1,6 +1,5 @@
 __author__ = 'dongliu'
 
-from google.appengine.ext import ndb
 from tools.decorators import *
 
 

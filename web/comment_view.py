@@ -2,18 +2,17 @@
 __author__ = 'dongliu'
 
 import StringIO
-import cgi
-import webapp2
+import json
+
+from google.appengine.api import users
+from google.appengine.api import taskqueue
+
 from db.postdb import *
 from db.commentdb import *
 from db.configdb import Config
-from datetime import datetime,timedelta
-from google.appengine.api import memcache
-from google.appengine.api import users
-from google.appengine.api import taskqueue
-import json
-from flask import (render_template, request, jsonify, abort)
+from flask import (request, jsonify, abort)
 from web import app
+
 
 @app.route('/comment/<int:postid>/<int:page>', methods=['GET'])
 def comment_list(postid, page):

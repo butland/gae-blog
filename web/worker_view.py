@@ -1,14 +1,13 @@
 #encoding=utf-8
 __author__ = 'dongliu'
 
-
 import logging
+
+from google.appengine.api import mail
+
 from db.postdb import Post
 from db.commentdb import Comment
-from google.appengine.api import mail
-from google.appengine.api import app_identity
 from db.configdb import *
-from google.appengine.api import users
 from service import postindex
 from db.postdb import PRIVILEGE_SHOW
 from web import app
@@ -38,7 +37,11 @@ def comment_worker():
         if pcomment.email:
             body = u"""%s 回复了你对 <a href="%s" target="_blank"/>「%s」</a>发表的评论: <br /> <br />
                 %s<br /> < hr/> %s""" \
-                   % (comment.username, "http://" + Config()["host"], post.title, pcomment.content, comment.content)
+                   % (comment.username,
+                      "http://" + Config()["host"],
+                      post.title,
+                      pcomment.content,
+                      comment.content)
             try:
                 message = mail.EmailMessage(sender=sender, subject=u"你的评论有了新回复")
                 message.to = pcomment.email
@@ -70,7 +73,7 @@ def post_worker():
     postid = int(request.values.get('postid'))
     post = Post.getpost(postid)
     try:
-        if  post is not None and post.privilege == PRIVILEGE_SHOW:
+        if post is not None and post.privilege == PRIVILEGE_SHOW:
             postindex.addpost(post)
         else:
             postindex.delpost(postid)

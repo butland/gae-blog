@@ -3,10 +3,12 @@ __author__ = 'dongliu'
 # when google app engine search api come to release, it will charge.
 # if you don't pay for your app, the search api will not work.
 
-from google.appengine.api import search
 from datetime import timedelta
-from tools.decorators import *
 import StringIO
+
+from google.appengine.api import search
+
+from tools.decorators import *
 
 
 def addpost(post):
@@ -115,6 +117,7 @@ def query(querystr, cursorstr, limit):
         'list': searchlist,
     }
 
+
 @cache(group="post", name="similars-${postid}")
 def getsimilars(postid, title, tags):
     """
@@ -153,6 +156,6 @@ def getsimilars(postid, title, tags):
             'title': title,
             'author': author,
             'date': (date + timedelta(hours=8)).strftime('%Y-%m-%d %H:%M'),
-            })
+        })
 
     return search_list

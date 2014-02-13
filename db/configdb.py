@@ -2,6 +2,7 @@ __author__ = 'dongliu'
 
 from google.appengine.ext import ndb
 from google.appengine.api import app_identity
+
 from tools.decorators import singleton
 
 
@@ -11,7 +12,7 @@ class Configure(ndb.Model):
 
 def setdict(pdict, name, value):
     ovalue = pdict[name]
-    if  type(ovalue) == type(1):
+    if type(ovalue) == type(1):
         pdict[name] = int(value)
     elif type(ovalue) == type(u''):
         pdict[name] = value

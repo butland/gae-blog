@@ -24,6 +24,7 @@ def loadpinyindata(datafile="res/pinyin.data"):
                 continue
             _pinyin_dict[ch] = pinyin.decode('utf-8')
 
+
 loadpinyindata()
 
 

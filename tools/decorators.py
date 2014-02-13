@@ -1,9 +1,9 @@
 __author__ = 'dongliu'
-from google.appengine.api import memcache
-from db.groupdb import *
 import inspect
 import itertools
 from string import Template
+
+from db.groupdb import *
 
 
 def tostr(arg):
@@ -88,6 +88,7 @@ def evictgroup(group):
 
 def evict(name, group=""):
     """evict specify cache"""
+
     def _evict(function):
         def wrapper(*args, **kwargs):
             argsdict = _parsefunction(function, args, kwargs)

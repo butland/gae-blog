@@ -6,6 +6,7 @@ from flask import (render_template, request, jsonify)
 from web import app
 from db.configdb import Config
 
+
 @app.route('/search', methods=['GET'])
 def search_page():
     return render_template('search.html', query=request.args.get('query'), config=Config())

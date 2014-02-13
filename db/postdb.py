@@ -1,10 +1,11 @@
 #encoding=utf-8
 
-from google.appengine.ext import ndb
 from datetime import datetime, timedelta
+import re
+
 from tools.decorators import *
 from tools import text_util
-import re
+
 
 # deleted
 PRIVILEGE_DEL = -1

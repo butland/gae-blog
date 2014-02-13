@@ -3,11 +3,12 @@ __author__ = 'dongliu'
 #coding=utf8
 __author__ = 'dongliu'
 
+from google.appengine.api import users
+
 from db.configdb import *
 from db.filedb import *
 from db.postdb import *
 from tools.pagertool import *
-from google.appengine.api import users
 from flask import (render_template, redirect, request, abort)
 from web import app
 
@@ -17,6 +18,7 @@ def config():
     if not users.is_current_user_admin():
         abort(403)
     return render_template('admin/config.html', config=Config())
+
 
 @app.route('/admin/config', methods=['POST'])
 def update_config():

@@ -41,13 +41,15 @@ class Pager(object):
 
     def hasprev(self):
         return self.page > 1
+
     def hasnext(self):
         return self.page < self.totalpage
 
     def showpages(self):
-        return xrange(self.begin, self.end+1)
+        return xrange(self.begin, self.end + 1)
 
     def begindot(self):
         return self.begin > 1
+
     def enddot(self):
         return self.end < self.totalpage

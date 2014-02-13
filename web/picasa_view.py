@@ -1,14 +1,14 @@
 #encoding=utf-8
 __author__ = 'dongliu'
 
-from flask import (render_template, request, jsonify)
+from flask import (render_template)
 from web import app
 from service import picasa
 from db.configdb import Config
 
 
 @app.route('/album', methods=['GET'])
-def album_list():
+def show_album_list():
     album_list = picasa.get_album_list(Config()["picasaalbumname"])
     return render_template('album_list.html', albumlist=album_list, config=Config())
 

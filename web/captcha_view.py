@@ -1,12 +1,14 @@
 #encoding=utf-8
 __author__ = 'dongliu'
 
-
 import StringIO
-from tools import captcha
+
 from google.appengine.api import memcache
+
+from tools import captcha
 from flask import (send_file, request, jsonify)
 from web import app
+
 
 @app.route('/captcha', methods=['GET'])
 def show_captcha():
@@ -24,8 +26,8 @@ def check_captcha():
     seq = request.values.get('seq')
     code = request.values.get('code')
     if not seq or not code:
-        return jsonify({"state" : -1})
-    ocode = memcache.get("captcha#"+seq)
+        return jsonify({"state": -1})
+    ocode = memcache.get("captcha#" + seq)
     if not ocode or code.strip().upper() != ocode:
-        return jsonify({"state" : 1})
-    return jsonify({"state" : 0})
+        return jsonify({"state": 1})
+    return jsonify({"state": 0})

@@ -1,6 +1,5 @@
 #encoding=utf-8
 
-from google.appengine.ext import ndb
 from tools.decorators import *
 
 # default counter

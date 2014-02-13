@@ -1,4 +1,3 @@
-
 __author__ = 'dongliu'
 
 import jinja2
@@ -15,8 +14,9 @@ from tools import text_util
 
 
 # url encode fuc for jinja
-def urlEncode(text):
+def urlencode(text):
     return urllib.quote(text.encode('utf-8'))
+
 
 @app.template_filter('tag')
 def encodetag(tag):
@@ -46,12 +46,13 @@ def get_alltags():
 def get_recent_comments():
     comment_list = Comment.get_commentlist(0, Config()["recentcommentnum"])
     for comment in comment_list:
-        comment.content = text_util.subStr(comment.content, 33*2)
+        comment.content = text_util.subStr(comment.content, 33 * 2)
     return comment_list
 
 
 def get_fortune():
     from service import fortune
+
     return fortune.rand_fortune().decode('utf-8')
 
 
@@ -66,6 +67,7 @@ def format_datetime(date):
     date = date + timedelta(hours=8)
     return date.strftime('%Y-%m-%d %H:%M')
 
+
 @app.template_filter('datetimelocal')
 def format_datetime_local(date):
     """used with html5 datetime-local input type"""
@@ -74,12 +76,13 @@ def format_datetime_local(date):
     date = date + timedelta(hours=8)
     return date.strftime('%Y-%m-%dT%H:%M')
 
+
 @app.template_filter('before')
-def substring_before(str, dem):
-    idx = str.find(dem)
+def substring_before(string, dem):
+    idx = string.find(dem)
     if idx < 0:
-        return str
-    return str[0:idx]
+        return string
+    return string[0:idx]
 
 # for jinja functions
 app.jinja_env.globals.update({
@@ -93,5 +96,5 @@ app.jinja_env.globals.update({
     'get_archives': get_archives,
     'get_fortune': get_fortune,
     'get_post_title': get_post_title,
-    'encode': urlEncode,
+    'encode': urlencode,
 })

@@ -1,6 +1,5 @@
 #encoding=utf-8
 
-from google.appengine.ext import ndb
 from tools.decorators import *
 
 
@@ -56,9 +55,10 @@ class Comment(ndb.Model):
         """
         convert to dict so we can ser comment to json, used for display.
         """
-        from datetime import datetime, timedelta
+        from datetime import timedelta
         import hashlib
         import json
+
         if self.email:
             email = self.email
         else:
@@ -80,7 +80,8 @@ class Comment(ndb.Model):
             pc = json.loads(self.parentContent)
             if pc.get(email):
                 pc["email"] = "default@default.com"
-            pc["avatar"] = "http://0.gravatar.com/avatar/" + hashlib.md5(pc["email"].encode('utf-8')).hexdigest().lower() + "?s=64"
+            pc["avatar"] = "http://0.gravatar.com/avatar/" + hashlib.md5(
+                pc["email"].encode('utf-8')).hexdigest().lower() + "?s=64"
             output["parentContent"] = pc
             if not isadmin:
                 if pc.get("ip"):
@@ -93,7 +94,8 @@ class Comment(ndb.Model):
         """
         use to generat parent json str, to store in datastore.
         """
-        from datetime import datetime, timedelta
+        from datetime import timedelta
+
         output = {
             "id": self.key.id(),
             "postId": self.postId,

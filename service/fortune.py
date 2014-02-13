@@ -12,10 +12,11 @@ def loadfortune(datafile="res/fortune.txt"):
             fortune_list.append(line)
     return fortune_list
 
+
 _fortune_list = loadfortune()
 
 
 def rand_fortune():
-    idx = random.randint(0, len(_fortune_list)-1)
+    idx = random.randint(0, len(_fortune_list) - 1)
     return _fortune_list[idx]
 
