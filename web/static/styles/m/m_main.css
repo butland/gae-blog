@@ -26,6 +26,7 @@ div.nav {
     height: 40px;
     font-size: 1.25rem;
 }
+
 div.nav a {
     color: #f8f8f8;
 }
@@ -34,11 +35,8 @@ div.post_item {
     border: 1px solid #d4d4d4;
     border-top-color: #d7d7d7;
     border-bottom-color: #cbcbcb;
-
     background-color: #fff;
-    /*box-shadow:0 1px 1px rgba(49,60,75,.35);*/
     margin: 10px 10px 13px;
-    /*border-radius: 4px;*/
 }
 
 div.post_item div.post_title {
@@ -68,12 +66,48 @@ div.post_item div.post_body {
     padding: 10px 10px 15px;
     font-size: 1rem;
     overflow: hidden;
-    word-break:break-all;
+    word-break: break-all;
     word-wrap: break-word;
 }
 
 div.post_body img {
     max-width: 100% !important;
+}
+
+/* comments */
+div#comments {
+    margin: 10px 10px;
+    background-color: #fff;
+}
+
+div.comment {
+    border-top: 1px solid #d7d7d7;
+    padding: 10px 10px;
+}
+
+div.comment div.comment_avatar {
+    float: left;
+}
+
+div.comment div.comment_info {
+    float: left;
+    padding-left: 10px;
+    height: 32px;
+}
+
+div.comment div.comment_reply {
+    color: #6877c6;
+}
+
+div.comment div.comment_body {
+    padding-top: 10px;
+}
+
+div#more_comments {
+    margin: 10px 10px;
+    background-color: #fff;
+    text-align: center;
+    padding: 10px;
 }
 
 /* for page */
@@ -113,20 +147,20 @@ div.page select {
     left: 0;
     right: 0;
     z-index: 99;
-    -webkit-appearance:none;
+    -webkit-appearance: none;
 }
 
 div.footer {
     padding: 10px 10px 0;
     text-align: left;
-    font-size: 0.7rem;
+    font-size: 0.8rem;
     color: #555555;
     line-height: 1.2;
 }
 
 blockquote {
-	border: 1px solid #ECEDED;
-	margin: 5px;
-	padding: 3px 1px 3px 1px;
+    border: 1px solid #ECEDED;
+    margin: 5px;
+    padding: 3px 1px 3px 1px;
     background-color: #F6F6F6;
 }

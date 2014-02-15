@@ -1,5 +1,3 @@
-__author__ = 'dongliu'
-
 #coding=utf8
 __author__ = 'dongliu'
 

@@ -12,14 +12,15 @@ class Configure(ndb.Model):
 
 def setdict(pdict, name, value):
     ovalue = pdict[name]
-    if type(ovalue) == type(1):
-        pdict[name] = int(value)
-    elif type(ovalue) == type(u''):
-        pdict[name] = value
-    elif type(ovalue) == type(''):
-        pdict[name] = value
-    elif type(ovalue) == type(False):
+    if isinstance(ovalue, bool):
         pdict[name] = value.lower() == "true" or value.lower() == "on"
+    elif isinstance(ovalue, int):
+        pdict[name] = int(value)
+    elif isinstance(ovalue, unicode):
+        pdict[name] = value
+    elif isinstance(ovalue, str):
+        pdict[name] = value
+
 
 
 @singleton

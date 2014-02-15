@@ -135,7 +135,7 @@ def view_post(postid):
 
     pf = platform.get_platform(request.headers.get('User-Agent'))
     if pf == platform.PHONE:
-        tpl = "m/m_post.html"
+        tpl = "m/m_post_view.html"
     else:
         tpl = "post_view.html"
     return render_template(tpl, post=post, similars=[], config=Config())
