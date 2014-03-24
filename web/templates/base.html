@@ -14,20 +14,15 @@
     {# script #}
     <!--[if !IE]><!--> <script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script> <!--<![endif]-->
     <!--[if gt IE 8]> <script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script> <![endif]-->
-    {# disable IE6 IE7 #}
-    <!--[if lte IE 7]> <script type="text/javascript"> window.location='/html/browser.html'; </script> <![endif]-->
-    {# ie8 fallback #}
-    <!--[if IE 8]>
-        <script src="http://libs.baidu.com/jquery/1.9.0/jquery.min.js"></script>
-         <link rel="stylesheet" type="text/css" href="/styles/ie8.css" />
-    <![endif]-->
+    {# disable IE6 IE7 IE8 #}
+    <!--[if lte IE 8]> <script type="text/javascript"> window.location='/html/browser.html'; </script> <![endif]-->
     {# feed #}
     {% block script %}{% endblock %}
     <script>
         $(document).ready(function() {
             $.get("/tools/fortune", function(result) {
-                $("#fortune").html(result);
-                $("#fortune").attr("title", result);
+                $("#fortune").html(result)
+                        .attr("title", result);
             });
         });
     </script>
